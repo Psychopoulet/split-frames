@@ -1,4 +1,3 @@
-
 "use strict";
 
 // deps
@@ -69,14 +68,16 @@ describe("split", () => {
 
 					assert.strictEqual("object", typeof chunk, "The chunk is not an object");
 					assert.strictEqual(true, chunk instanceof Buffer, "The chunk is not a Buffer");
-					assert.deepStrictEqual(Buffer.from([ STX ]), chunk, "The chunk is not as expected");
+					assert.deepStrictEqual(Buffer.from([ STX, 0x01 ]), chunk, "The chunk is not as expected");
 
 					resolve();
 
 				});
 
+				// tested frame
 				splitter.write(Buffer.from([ 0x01, 0x03, 0x04, 0x05, 0x06 ]));
-				splitter.write(Buffer.from([ 0x02 ]));
+				// valid frame to close tested frame
+				splitter.write(Buffer.from([ STX, 0x01, STX ]));
 
 			});
 
@@ -86,7 +87,7 @@ describe("split", () => {
 
 			return new Promise((resolve, reject) => {
 
-				new SplitFrames({
+				const splitter = new SplitFrames({
 					"start": STX
 				}).on("error", reject).on("data", (chunk) => {
 
@@ -96,7 +97,12 @@ describe("split", () => {
 
 					resolve();
 
-				}).write(Buffer.from([ 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 ]));
+				});
+
+				// tested frame
+				splitter.write(Buffer.from([ 0x01, STX, 0x03, 0x04, 0x05, 0x06 ]));
+				// close tested frame
+				splitter.write(Buffer.from([ STX ]));
 
 			});
 
@@ -106,23 +112,223 @@ describe("split", () => {
 
 			return new Promise((resolve, reject) => {
 
-				new SplitFrames({
+				let dataCount = 0;
+
+				const splitter = new SplitFrames({
 					"start": STX
 				}).on("error", reject).on("data", (chunk) => {
 
-					(0, console).log(chunk);
+					++dataCount;
 
-					assert.strictEqual("object", typeof chunk, "The chunk is not an object");
-					assert.strictEqual(true, chunk instanceof Buffer, "The chunk is not a Buffer");
-					assert.deepStrictEqual(Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06, 0x01 ]), chunk, "The chunk is not as expected");
+					if (1 === dataCount) {
 
-					resolve();
+						assert.strictEqual("object", typeof chunk, "The chunk is not an object");
+						assert.strictEqual(true, chunk instanceof Buffer, "The chunk is not a Buffer");
+						assert.deepStrictEqual(Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06, 0x01 ]), chunk, "The chunk is not as expected");
 
-				}).write(Buffer.from([ 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 ]));
+					}
+					else if (2 === dataCount) {
+
+						assert.strictEqual("object", typeof chunk, "The chunk is not an object");
+						assert.strictEqual(true, chunk instanceof Buffer, "The chunk is not a Buffer");
+						assert.deepStrictEqual(Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06 ]), chunk, "The chunk is not as expected");
+
+						resolve();
+
+					}
+					else {
+						reject(new Error("Too much frames"));
+					}
+
+				});
+
+				// tested frame
+				splitter.write(Buffer.from([ 0x01, STX, 0x03, 0x04, 0x05, 0x06, 0x01, STX, 0x03, 0x04, 0x05, 0x06 ]));
+				// close tested frame
+				splitter.write(Buffer.from([ STX ]));
 
 			});
 
 		});
+
+		it("should split frame with three start", () => {
+
+			return new Promise((resolve, reject) => {
+
+				let dataCount = 0;
+
+				const splitter = new SplitFrames({
+					"start": STX
+				}).on("error", reject).on("data", (chunk) => {
+
+					++dataCount;
+
+					if (1 === dataCount) {
+
+						assert.strictEqual("object", typeof chunk, "The chunk is not an object");
+						assert.strictEqual(true, chunk instanceof Buffer, "The chunk is not a Buffer");
+						assert.deepStrictEqual(Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06, 0x01 ]), chunk, "The chunk is not as expected");
+
+					}
+					else if (2 === dataCount) {
+
+						assert.strictEqual("object", typeof chunk, "The chunk is not an object");
+						assert.strictEqual(true, chunk instanceof Buffer, "The chunk is not a Buffer");
+						assert.deepStrictEqual(Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06 ]), chunk, "The chunk is not as expected");
+
+						resolve();
+
+					}
+					else {
+						reject(new Error("Too much frames"));
+					}
+
+				});
+
+				// tested frame
+				splitter.write(Buffer.from([ 0x01, STX, 0x03, 0x04, 0x05, 0x06, 0x01, STX, 0x03, 0x04, 0x05, 0x06, STX ]));
+
+			});
+
+		});
+
+	});
+
+	describe("end only", () => {
+
+		// it("should split frame with no end", () => {
+
+		// 	return new Promise((resolve, reject) => {
+
+		// 		const splitter = new SplitFrames({
+		// 			"end": ETX
+		// 		}).on("error", reject).on("data", (chunk) => {
+
+		// 			assert.strictEqual("object", typeof chunk, "The chunk is not an object");
+		// 			assert.strictEqual(true, chunk instanceof Buffer, "The chunk is not a Buffer");
+		// 			assert.deepStrictEqual(Buffer.from([ 0x01, 0x03, 0x04, 0x05, 0x06, ETX ]), chunk, "The chunk is not as expected");
+
+		// 			resolve();
+
+		// 		});
+
+		// 		// tested frame
+		// 		splitter.write(Buffer.from([ 0x01, 0x03, 0x04, 0x05, 0x06 ]));
+		// 		// close tested frame
+		// 		splitter.write(Buffer.from([ ETX ]));
+
+		// 	});
+
+		// });
+
+		// it("should split frame with one start", () => {
+
+		// 	return new Promise((resolve, reject) => {
+
+		// 		const splitter = new SplitFrames({
+		// 			"start": STX
+		// 		}).on("error", reject).on("data", (chunk) => {
+
+		// 			assert.strictEqual("object", typeof chunk, "The chunk is not an object");
+		// 			assert.strictEqual(true, chunk instanceof Buffer, "The chunk is not a Buffer");
+		// 			assert.deepStrictEqual(Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06 ]), chunk, "The chunk is not as expected");
+
+		// 			resolve();
+
+		// 		});
+
+		// 		// tested frame
+		// 		splitter.write(Buffer.from([ 0x01, STX, 0x03, 0x04, 0x05, 0x06 ]));
+		// 		// close tested frame
+		// 		splitter.write(Buffer.from([ STX ]));
+
+		// 	});
+
+		// });
+
+		// it("should split frame with two start", () => {
+
+		// 	return new Promise((resolve, reject) => {
+
+		// 		let dataCount = 0;
+
+		// 		const splitter = new SplitFrames({
+		// 			"start": STX
+		// 		}).on("error", reject).on("data", (chunk) => {
+
+		// 			++dataCount;
+
+		// 			if (1 === dataCount) {
+
+		// 				assert.strictEqual("object", typeof chunk, "The chunk is not an object");
+		// 				assert.strictEqual(true, chunk instanceof Buffer, "The chunk is not a Buffer");
+		// 				assert.deepStrictEqual(Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06, 0x01 ]), chunk, "The chunk is not as expected");
+
+		// 			}
+		// 			else if (2 === dataCount) {
+
+		// 				assert.strictEqual("object", typeof chunk, "The chunk is not an object");
+		// 				assert.strictEqual(true, chunk instanceof Buffer, "The chunk is not a Buffer");
+		// 				assert.deepStrictEqual(Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06 ]), chunk, "The chunk is not as expected");
+
+		// 				resolve();
+
+		// 			}
+		// 			else {
+		// 				reject(new Error("Too much frames"));
+		// 			}
+
+		// 		});
+
+		// 		// tested frame
+		// 		splitter.write(Buffer.from([ 0x01, STX, 0x03, 0x04, 0x05, 0x06, 0x01, STX, 0x03, 0x04, 0x05, 0x06 ]));
+		// 		// close tested frame
+		// 		splitter.write(Buffer.from([ STX ]));
+
+		// 	});
+
+		// });
+
+		// it("should split frame with three start", () => {
+
+		// 	return new Promise((resolve, reject) => {
+
+		// 		let dataCount = 0;
+
+		// 		const splitter = new SplitFrames({
+		// 			"start": STX
+		// 		}).on("error", reject).on("data", (chunk) => {
+
+		// 			++dataCount;
+
+		// 			if (1 === dataCount) {
+
+		// 				assert.strictEqual("object", typeof chunk, "The chunk is not an object");
+		// 				assert.strictEqual(true, chunk instanceof Buffer, "The chunk is not a Buffer");
+		// 				assert.deepStrictEqual(Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06, 0x01 ]), chunk, "The chunk is not as expected");
+
+		// 			}
+		// 			else if (2 === dataCount) {
+
+		// 				assert.strictEqual("object", typeof chunk, "The chunk is not an object");
+		// 				assert.strictEqual(true, chunk instanceof Buffer, "The chunk is not a Buffer");
+		// 				assert.deepStrictEqual(Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06 ]), chunk, "The chunk is not as expected");
+
+		// 				resolve();
+
+		// 			}
+		// 			else {
+		// 				reject(new Error("Too much frames"));
+		// 			}
+
+		// 		});
+
+		// 		// tested frame
+		// 		splitter.write(Buffer.from([ 0x01, STX, 0x03, 0x04, 0x05, 0x06, 0x01, STX, 0x03, 0x04, 0x05, 0x06, STX ]));
+
+		// 	});
+
+		// });
 
 	});
 
