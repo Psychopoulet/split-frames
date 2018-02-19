@@ -165,7 +165,7 @@
 	"line-comment-position": [ "error", { "position": "above" } ],
 	"linebreak-style": 0,
 	"lines-around-comment": "error",
-	"max-depth": "error",
+	"max-depth": 0,
 	"max-len": [ "error", 150 ],
 	"max-lines": 0,
 	"max-nested-callbacks": [ "error", 5 ],
