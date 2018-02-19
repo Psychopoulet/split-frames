@@ -1,0 +1,43 @@
+{
+  "name": "split-frames",
+  "version": "0.1.0",
+  "description": "Split Buffer frames from streams",
+  "main": "lib/main.js",
+  "scripts": {
+    "start": "node lib/main.js",
+    "test": "gulp eslint",
+    "test-travis": "gulp mocha"
+  },
+  "pre-commit": [
+    "test"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Psychopoulet/split-frames"
+  },
+  "keywords": [
+    "warcraft",
+    "sounds",
+    "reign of chaos",
+    "frozen throne"
+  ],
+  "author": "Sébastien VIDAL",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Psychopoulet/split-frames/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "3.9.1",
+    "gulp-plumber": "1.1.0",
+    "gulp-eslint": "4.0.0",
+    "gulp-mocha": "3.0.1",
+    "gulp-istanbul": "1.1.2",
+    "gulp-coveralls": "0.1.4",
+    "pre-commit": "1.2.2"
+  },
+  "homepage": "https://github.com/Psychopoulet/split-frames#readme",
+  "engines": {
+    "node": ">=4.0.0"
+  }
+}
