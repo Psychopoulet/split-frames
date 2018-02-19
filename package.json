@@ -16,10 +16,14 @@
     "url": "git://github.com/Psychopoulet/split-frames"
   },
   "keywords": [
-    "warcraft",
-    "sounds",
-    "reign of chaos",
-    "frozen throne"
+    "frame",
+    "Buffer", "buffer",
+    "split",
+    "formate",
+    "parse",
+    "bit",
+    "stream",
+    "Transform", "transform"
   ],
   "author": "Sébastien VIDAL",
   "license": "ISC",
