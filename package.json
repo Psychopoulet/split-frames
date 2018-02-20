@@ -5,11 +5,10 @@
   "main": "lib/main.js",
   "scripts": {
     "start": "node lib/main.js",
-    "test": "gulp eslint",
-    "test-travis": "gulp mocha"
+    "tests": "gulp tests"
   },
   "pre-commit": [
-    "test"
+    "tests"
   ],
   "repository": {
     "type": "git",
