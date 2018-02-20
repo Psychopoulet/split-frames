@@ -55,18 +55,15 @@ streamStartAndEscapedEnd.pipe(new Spliter({
 });
 streamStartAndEscapedEnd.push(Buffer.from([ 0x01, STX, 0x04, 0x05, 0x06, DLE, ETX, STX, 0x04, 0x05 ]));
 
-/*
-	// @TODO
-	streamStartAndEndAndEscape.pipe(new Spliter({
-		"start": STX,
-		"end": ETX,
-		"escapeWith": DLE,
-		"escaped": [ DLE, STX, ETX ]
-	})).on("data", (chunk) => {
-		// Buffer([ 0x04, STX, 0x05, 0x06, DLE, 0x07, ETX, 0x08 ])
-	});
-	streamStartAndEscapedEnd.push(Buffer.from([ 0x01, STX, 0x04, DLE, STX, 0x05, 0x06, DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, STX, 0x04, 0x05 ]));
-*/
+streamStartAndEndAndEscape.pipe(new Spliter({
+	"start": STX,
+	"end": ETX,
+	"escapeWith": DLE,
+	"escaped": [ DLE, STX, ETX ]
+})).on("data", (chunk) => {
+	// Buffer([ 0x04, STX, 0x05, 0x06, DLE, 0x07, ETX, 0x08 ])
+});
+streamStartAndEscapedEnd.push(Buffer.from([ 0x01, STX, 0x04, DLE, STX, 0x05, 0x06, DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, STX, 0x04, 0x05 ]));
 ```
 
 ## Tests
