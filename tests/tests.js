@@ -68,7 +68,7 @@ describe("split", () => {
 
 					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x01 ]), "The chunk is not as expected");
+					assert.deepStrictEqual(chunk, Buffer.from([ 0x01 ]), "The chunk is not as expected");
 
 					resolve();
 
@@ -93,7 +93,7 @@ describe("split", () => {
 
 					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
+					assert.deepStrictEqual(chunk, Buffer.from([ 0x03, 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
 
 					resolve();
 
@@ -124,14 +124,14 @@ describe("split", () => {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06, 0x01 ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x03, 0x04, 0x05, 0x06, 0x01 ]), "The chunk is not as expected");
 
 					}
 					else if (2 === dataCount) {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x03, 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
 
 						resolve();
 
@@ -167,14 +167,14 @@ describe("split", () => {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06, 0x01 ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x03, 0x04, 0x05, 0x06, 0x01 ]), "The chunk is not as expected");
 
 					}
 					else if (2 === dataCount) {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x03, 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x03, 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
 
 						resolve();
 
@@ -206,14 +206,14 @@ describe("split", () => {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ DLE, STX, 0x03, 0x04, 0x05, 0x06, 0x01 ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x03, 0x04, 0x05, 0x06, 0x01 ]), "The chunk is not as expected");
 
 					}
 					else if (2 === dataCount) {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ DLE, STX, 0x09, 0x10, 0x01, 0x02 ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x09, 0x10, 0x01, 0x02 ]), "The chunk is not as expected");
 
 						resolve();
 
@@ -243,7 +243,7 @@ describe("split", () => {
 
 					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ 0x01, 0x02, 0x04, 0x05, 0x06, ETX ]), "The chunk is not as expected");
+					assert.deepStrictEqual(chunk, Buffer.from([ 0x01, 0x02, 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
 
 					resolve();
 
@@ -268,7 +268,7 @@ describe("split", () => {
 
 					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ 0x01, 0x02, 0x04, 0x05, ETX ]), "The chunk is not as expected");
+					assert.deepStrictEqual(chunk, Buffer.from([ 0x01, 0x02, 0x04, 0x05 ]), "The chunk is not as expected");
 
 					resolve();
 
@@ -299,14 +299,14 @@ describe("split", () => {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ 0x01, 0x02, ETX ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x01, 0x02 ]), "The chunk is not as expected");
 
 					}
 					else if (2 === dataCount) {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ 0x04, 0x05, 0x06, ETX ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
 
 						resolve();
 
@@ -342,21 +342,21 @@ describe("split", () => {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ 0x01, 0x02, ETX ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x01, 0x02 ]), "The chunk is not as expected");
 
 					}
 					else if (2 === dataCount) {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ 0x04, 0x05, 0x06, ETX ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
 
 					}
 					else if (3 === dataCount) {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ 0x07, 0x08, 0x09, ETX ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x07, 0x08, 0x09 ]), "The chunk is not as expected");
 
 						resolve();
 
@@ -388,21 +388,21 @@ describe("split", () => {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ 0x01, 0x02, DLE, ETX ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x01, 0x02 ]), "The chunk is not as expected");
 
 					}
 					else if (2 === dataCount) {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ 0x04, 0x05, 0x06, DLE, ETX ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
 
 					}
 					else if (3 === dataCount) {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ 0x07, 0x08, 0x09, DLE, ETX ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x07, 0x08, 0x09 ]), "The chunk is not as expected");
 
 						resolve();
 
@@ -433,7 +433,7 @@ describe("split", () => {
 
 					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x01, ETX ]), "The chunk is not as expected");
+					assert.deepStrictEqual(chunk, Buffer.from([ 0x01 ]), "The chunk is not as expected");
 
 					resolve();
 
@@ -459,7 +459,7 @@ describe("split", () => {
 
 					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x01, 0x04, 0x05, 0x06, ETX ]), "The chunk is not as expected");
+					assert.deepStrictEqual(chunk, Buffer.from([ 0x01, 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
 
 					resolve();
 
@@ -485,7 +485,7 @@ describe("split", () => {
 
 					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x04, 0x05, ETX ]), "The chunk is not as expected");
+					assert.deepStrictEqual(chunk, Buffer.from([ 0x04, 0x05 ]), "The chunk is not as expected");
 
 					resolve();
 
@@ -513,14 +513,14 @@ describe("split", () => {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x04, 0x05, ETX ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x04, 0x05 ]), "The chunk is not as expected");
 
 					}
 					else if (2 === dataCount) {
 
 						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-						assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x01, ETX ]), "The chunk is not as expected");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x01 ]), "The chunk is not as expected");
 
 						resolve();
 
@@ -551,7 +551,7 @@ describe("split", () => {
 
 					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x04, 0x05, 0x06, DLE, ETX ]), "The chunk is not as expected");
+					assert.deepStrictEqual(chunk, Buffer.from([ 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
 
 					resolve();
 
@@ -573,7 +573,7 @@ describe("split", () => {
 
 					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ DLE, STX, 0x04, 0x05, 0x06, ETX ]), "The chunk is not as expected");
+					assert.deepStrictEqual(chunk, Buffer.from([ 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
 
 					resolve();
 
