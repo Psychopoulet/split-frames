@@ -1,9 +1,9 @@
 # split-frames
 Split Buffer frames from streams
 
-[![Build Status](https://api.travis-ci.org/Psychopoulet/split-frames.svg?branch=develop)](https://travis-ci.org/Psychopoulet/split-frames)
-[![Coverage Status](https://coveralls.io/repos/github/Psychopoulet/split-frames/badge.svg?branch=develop)](https://coveralls.io/github/Psychopoulet/split-frames)
-[![Dependency Status](https://img.shields.io/david/Psychopoulet/split-frames/develop.svg)](https://github.com/Psychopoulet/split-frames)
+[![Build Status](https://api.travis-ci.org/Psychopoulet/split-frames.svg?branch=master)](https://travis-ci.org/Psychopoulet/split-frames)
+[![Coverage Status](https://coveralls.io/repos/github/Psychopoulet/split-frames/badge.svg?branch=master)](https://coveralls.io/github/Psychopoulet/split-frames)
+[![Dependency Status](https://img.shields.io/david/Psychopoulet/split-frames/master.svg)](https://github.com/Psychopoulet/split-frames)
 
 ## Installation
 
