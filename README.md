@@ -114,7 +114,7 @@ stream.push(Buffer.from([ 0x01, STX, 0x04, DLE, STX, 0x05, 0x06 ]));
 stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, STX, 0x04, 0x05 ]));
 ```
 
-### And what do you think about multiple start (or end !) bits ?
+### And what do you think about multiple start (or end !) bits possibilities ?
 
 For even parity in seriaport, for example
 
