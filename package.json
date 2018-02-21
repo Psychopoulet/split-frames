@@ -1,6 +1,6 @@
 {
   "name": "split-frames",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Split Buffer frames from streams",
   "main": "lib/main.js",
   "scripts": {
