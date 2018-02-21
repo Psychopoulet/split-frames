@@ -27,7 +27,7 @@ const DLE = 0x10;
 streamStart.pipe(new Spliter({
 	"start": STX
 })).on("data", (chunk) => {
-	// Buffer([ 0x04, 0x05, 0x06 ]) (3x)
+	// Buffer([ 0x04, 0x05, 0x06 ]) (2x)
 });
 streamStart.push(Buffer.from([ 0x01, STX, 0x04, 0x05, 0x06, STX, 0x04, 0x05 ]));
 streamStart.push(Buffer.from([ 0x06, STX ]));
@@ -37,7 +37,7 @@ streamEnd.pipe(new Spliter({
 })).on("data", (chunk) => {
 	// Buffer([ 0x01, 0x04, 0x05, 0x06 ])
 });
-streamStart.push(Buffer.from([ 0x01, 0x04, 0x05, 0x06, ETX, 0x04, 0x05 ]));
+streamEnd.push(Buffer.from([ 0x01, 0x04, 0x05, 0x06, ETX, 0x04, 0x05 ]));
 
 streamStartAndEnd.pipe(new Spliter({
 	"start": STX,
@@ -63,7 +63,7 @@ streamStartAndEndAndEscape.pipe(new Spliter({
 })).on("data", (chunk) => {
 	// Buffer([ 0x04, STX, 0x05, 0x06, DLE, 0x07, ETX, 0x08 ])
 });
-streamStartAndEscapedEnd.push(Buffer.from([ 0x01, STX, 0x04, DLE, STX, 0x05, 0x06, DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, STX, 0x04, 0x05 ]));
+streamStartAndEndAndEscape.push(Buffer.from([ 0x01, STX, 0x04, DLE, STX, 0x05, 0x06, DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, STX, 0x04, 0x05 ]));
 ```
 
 ## Tests
