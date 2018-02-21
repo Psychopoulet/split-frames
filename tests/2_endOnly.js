@@ -1,3 +1,7 @@
+/*
+	eslint no-new: 0
+*/
+
 "use strict";
 
 // deps
@@ -15,6 +19,26 @@
 describe("split", () => {
 
 	describe("end only", () => {
+
+		it("should test wrong end", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"end": "test"
+				});
+			}, Error);
+
+		});
+
+		it("should test wrong end", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"end": [ "test" ]
+				});
+			}, Error);
+
+		});
 
 		it("should split frame with no end", () => {
 

@@ -67,6 +67,16 @@ describe("split", () => {
 
 		});
 
+		it("should split frame with wrong escap tag", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"escapeWith": "test"
+				});
+			}, Error);
+
+		});
+
 		it("should split frame with escaped data", () => {
 
 			return new Promise((resolve, reject) => {

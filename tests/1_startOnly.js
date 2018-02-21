@@ -1,3 +1,7 @@
+/*
+	eslint no-new: 0
+*/
+
 "use strict";
 
 // deps
@@ -8,6 +12,7 @@
 // consts
 
 	const STX = 0x02;
+	const STX2 = 0x82;
 	const DLE = 0x10;
 
 // module
@@ -15,6 +20,26 @@
 describe("split", () => {
 
 	describe("start only", () => {
+
+		it("should test wrong start", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"start": "test"
+				});
+			}, Error);
+
+		});
+
+		it("should test wrong start", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"start": [ "test" ]
+				});
+			}, Error);
+
+		});
 
 		it("should split frame with no start", () => {
 
@@ -205,6 +230,96 @@ describe("split", () => {
 
 				// tested frame
 				}).write(Buffer.from([ 0x01, STX, 0x01, DLE, STX, 0x04, 0x05, DLE, DLE, 0x06, 0x07, 0x08, STX ]));
+
+			});
+
+		});
+
+		it("should split frame with two start and different starters", () => {
+
+			return new Promise((resolve, reject) => {
+
+				let dataCount = 0;
+
+				new SplitFrames({
+					"start": [ STX, STX2 ]
+				}).on("error", reject).on("data", (chunk) => {
+
+					++dataCount;
+
+					if (1 === dataCount) {
+
+						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x03, 0x04, 0x05, 0x06, 0x01 ]), "The chunk is not as expected");
+
+					}
+					else if (2 === dataCount) {
+
+						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x09, 0x10, 0x01 ]), "The chunk is not as expected");
+
+						resolve();
+
+					}
+					else {
+						reject(new Error("Too much frames"));
+					}
+
+				// tested frame
+				}).write(Buffer.from([
+					0x01,
+					STX, 0x03, 0x04, 0x05, 0x06, 0x01,
+					STX2, 0x09, 0x10, 0x01,
+					STX
+				]));
+
+			});
+
+		});
+
+		it("should split frame with two start and different starters and escaped data", () => {
+
+			return new Promise((resolve, reject) => {
+
+				let dataCount = 0;
+
+				new SplitFrames({
+					"start": [ STX, STX2 ],
+					"escapeWith": DLE,
+					"escaped": [ DLE, STX, STX2 ]
+				}).on("error", reject).on("data", (chunk) => {
+
+					++dataCount;
+
+					if (1 === dataCount) {
+
+						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x01, STX, 0x04, 0x05, DLE, 0x06, 0x07, 0x08 ]), "The chunk is not as expected");
+
+					}
+					else if (2 === dataCount) {
+
+						assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+						assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x01, STX, 0x04, 0x05, DLE, 0x06, 0x07, 0x08 ]), "The chunk is not as expected");
+
+						resolve();
+
+					}
+					else {
+						reject(new Error("Too much frames"));
+					}
+
+				// tested frame
+				}).write(Buffer.from([
+					0x01,
+					STX, 0x01, DLE, STX, 0x04, 0x05, DLE, DLE, 0x06, 0x07, 0x08,
+					STX2, 0x01, DLE, STX, 0x04, 0x05, DLE, DLE, 0x06, 0x07, 0x08,
+					STX
+				]));
 
 			});
 
