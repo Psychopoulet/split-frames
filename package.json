@@ -1,6 +1,6 @@
 {
   "name": "split-frames",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Split Buffer frames from streams",
   "main": "lib/main.js",
   "scripts": {
@@ -21,10 +21,14 @@
     "split",
     "formate",
     "parse",
+    "escape",
     "bit",
     "stream",
     "Transform",
-    "transform"
+    "transform",
+    "STX",
+    "ETX",
+    "DLE"
   ],
   "author": "Sébastien VIDAL",
   "license": "ISC",
