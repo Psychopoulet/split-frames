@@ -211,11 +211,19 @@ describe("documentation", () => {
 			const stream = createReadStream();
 
 			stream.pipe(new Splitter({
+				"start": STX,
+				"end": ETX,
 				"ack": ACK,
 				"nak": NAK,
 				"escapeWith": DLE,
 				"escaped": [ DLE, ACK, NAK ]
-			})).on("ack", () => {
+			})).on("data", (chunk) => {
+
+				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+				assert.deepStrictEqual(chunk, Buffer.from([ 0x20, 0x21, 0x22, ACK, NAK, 0x23 ]), "The chunk is not as expected");
+
+			}).on("ack", () => {
 				++dataCount;
 			}).on("nak", () => {
 
@@ -227,8 +235,8 @@ describe("documentation", () => {
 
 			});
 
-			stream.push(Buffer.from([ 0x01, ACK, 0x02, DLE, ACK, 0x03, 0x04 ]));
-			stream.push(Buffer.from([ 0x01, NAK, 0x02, DLE, NAK, 0x03, 0x04 ]));
+			stream.push(Buffer.from([ 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK ]));
+			stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, 0x20, 0x21 ]));
 
 		});
 

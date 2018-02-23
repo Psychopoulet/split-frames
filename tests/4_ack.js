@@ -11,8 +11,8 @@
 
 // consts
 
-	// const STX = 0x02;
-	// const ETX = 0x03;
+	const STX = 0x02;
+	const ETX = 0x03;
 	const DLE = 0x10;
 	const ACK = 0x06;
 
@@ -112,40 +112,44 @@ describe("ack", () => {
 
 	});
 
-	// describe("with tags", () => {
+	describe("with tags", () => {
 
-	// 	it("should test ack with start tag", () => {
+		it("should test ack with start and end tags", () => {
 
-	// 		return new Promise((resolve, reject) => {
+			return new Promise((resolve, reject) => {
 
-	// 			let ackCount = 0;
+				let ackCount = 0;
 
-	// 			const splitter = new SplitFrames({
-	// 				"ack": ACK,
-	// 				"start": STX,
-	// 				"end": ETX,
-	// 				"escapeWith": DLE,
-	// 				"escaped": [ DLE, ACK ]
-	// 			}).on("error", reject).on("data", (chunk) => {
+				const splitter = new SplitFrames({
+					"ack": ACK,
+					"start": STX,
+					"end": ETX,
+					"escapeWith": DLE,
+					"escaped": [ DLE, ACK ]
+				}).on("error", reject).on("data", (chunk) => {
 
-	// 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-	// 				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-	// 				assert.deepStrictEqual(chunk, Buffer.from([ 0x24, 0x25, 0x27 ]), "The chunk is not as expected");
+					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+					assert.deepStrictEqual(chunk, Buffer.from([ 0x24, 0x25, 0x27 ]), "The chunk is not as expected");
 
-	// 				assert.strictEqual(ackCount, 3, "The amount of ack received is not as expected");
+					assert.strictEqual(ackCount, 3, "The amount of ack received is not as expected");
 
-	// 				resolve();
+				}).on("ack", () => {
 
-	// 			}).on("ack", () => {
-	// 				++ackCount;
-	// 			});
+					++ackCount;
 
-	// 			splitter.write(Buffer.from([ ACK, 0x21, ACK, 0x21, 0x21, ACK, 0x21, DLE, ACK, STX, 0x24, 0x25, 0x27, ETX ]));
+					if (4 === ackCount) {
+						resolve();
+					}
 
-	// 		});
+				});
 
-	// 	});
+				splitter.write(Buffer.from([ ACK, 0x21, ACK, 0x21, 0x21, ACK, 0x21, DLE, ACK, STX, 0x24, 0x25, 0x27, ETX, ACK ]));
 
-	// });
+			});
+
+		});
+
+	});
 
 });

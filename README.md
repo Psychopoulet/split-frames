@@ -133,7 +133,7 @@ stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, 0x06, 0x04, 0x05 
 
 ### Want acknowledgement / negative acknowledgement ?
 
-> only with no tags | start AND end tags
+> only with no tags || start AND end tags
 
 ```javascript
 const stream = createReadStream();
@@ -147,10 +147,10 @@ stream.pipe(new Splitter({
 }).on("nak", () => {
 	console.log("nak received"); // (only 1x) -> in data, good, escaped
 }).on("data", (chunk) => {
-	// Buffer([ 0x20, 0x21, 0x22, ACK, 0x23 ]) (x2)
+	// Buffer([ 0x20, 0x21, 0x22, ACK, NAL, 0x23 ]) (x1)
 });
 
-stream.push(Buffer.from([ 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, ]));
+stream.push(Buffer.from([ 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK ]));
 stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, 0x20, 0x21 ]));
 ```
 
