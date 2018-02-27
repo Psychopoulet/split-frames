@@ -38,7 +38,8 @@ describe("start only", () => {
 			// tested frame
 			splitter.write(Buffer.from([ 0x01, 0x03, 0x04, 0x05, 0x06 ]));
 			// valid frame to close tested frame
-			splitter.write(Buffer.from([ STX, 0x01, STX ]));
+			splitter.write(Buffer.from([ STX, 0x01 ]));
+			splitter.write(Buffer.from([ STX ]));
 
 		});
 

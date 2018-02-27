@@ -13,6 +13,7 @@
 	const ETX = 0x03;
 	const DLE = 0x10;
 	const ACK = 0x06;
+	const WAK = 0x13;
 	const NAK = 0x15;
 
 // module
@@ -207,7 +208,9 @@ describe("documentation", () => {
 
 		return new Promise((resolve) => {
 
-			let dataCount = 0;
+			let ackFound = false;
+			let nakFound = false;
+
 			const stream = createReadStream();
 
 			stream.pipe(new Splitter({
@@ -215,28 +218,30 @@ describe("documentation", () => {
 				"end": ETX,
 				"ack": ACK,
 				"nak": NAK,
+				"wak": WAK,
 				"escapeWith": DLE,
 				"escaped": [ DLE, ACK, NAK ]
 			})).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-				assert.deepStrictEqual(chunk, Buffer.from([ 0x20, 0x21, 0x22, ACK, NAK, 0x23 ]), "The chunk is not as expected");
+				assert.deepStrictEqual(chunk, Buffer.from([ 0x20, 0x21, 0x22, ACK, NAK, WAK, 0x23 ]), "The chunk is not as expected");
 
 			}).on("ack", () => {
-				++dataCount;
+				ackFound = true;
 			}).on("nak", () => {
+				nakFound = true;
+			}).on("wak", () => {
 
-				++dataCount;
-
-				assert.strictEqual(dataCount, 2, "Results count is not as expected");
+				assert.strictEqual(ackFound, true, "There is no ack found");
+				assert.strictEqual(nakFound, true, "There is no nak found");
 
 				resolve();
 
 			});
 
-			stream.push(Buffer.from([ 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK ]));
-			stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, 0x20, 0x21 ]));
+			stream.push(Buffer.from([ 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
+			stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, WAK, DLE, WAK, 0x20, 0x21 ]));
 
 		});
 
