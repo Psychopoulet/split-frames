@@ -34,7 +34,7 @@ function createReadStream () { return new Readable({ read () { } }); }
 And the "STX", "DLE" and "ETX" constants are defined like that :
 
 ```javascript
-const STX = 0x02, ETX = 0x03, DLE = 0x10, ACK = 0x06, NAK = 0x15;
+const STX = 0x02, ETX = 0x03, DLE = 0x10, ACK = 0x06, NAK = 0x15, WAK = 0x13;
 ```
 
 ### want to split frames content on a start bit ?
@@ -131,7 +131,7 @@ stream.push(Buffer.from([ STX2, 0x04, DLE, STX, 0x05, 0x06 ]));
 stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, 0x06, 0x04, 0x05 ]));
 ```
 
-### Want acknowledgement / negative acknowledgement ?
+### Want acknowledgement ? (positive, negative, waiting for)
 
 > only with no tags || start AND end tags
 
@@ -140,24 +140,26 @@ const stream = createReadStream();
 
 stream.pipe(new Splitter({
 	"start": STX, "end": ETX,
-	"ack": ACK, "nak": NAK,
-	"escapeWith": DLE, "escaped": [ DLE, ACK, NAK ]
+	"ack": ACK, "nak": NAK, "wak": WAK,
+	"escapeWith": DLE, "escaped": [ DLE, ACK, NAK, WAK ]
 })).on("ack", () => {
 	console.log("ack received"); // (only 1x) -> good, escaped, in data
 }).on("nak", () => {
 	console.log("nak received"); // (only 1x) -> in data, good, escaped
+}).on("wak", () => {
+	console.log("wak received"); // (only 1x) -> in data, good, escaped
 }).on("data", (chunk) => {
-	// Buffer([ 0x20, 0x21, 0x22, ACK, NAL, 0x23 ]) (x1)
+	// Buffer([ 0x20, 0x21, 0x22, ACK, NAK, WAK, 0x23 ]) (x1)
 });
 
-stream.push(Buffer.from([ 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK ]));
-stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, 0x20, 0x21 ]));
+stream.push(Buffer.from([ 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
+stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, WAK, DLE, WAK, 0x20, 0x21 ]));
 ```
 
 ## Tests
 
 ```bash
-$ mocha tests/tests.js
+$ gulp tests
 ```
 
 ## License

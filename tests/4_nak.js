@@ -50,6 +50,34 @@ describe("nak", () => {
 
 		});
 
+		it("should test nak with two bits", () => {
+
+			return new Promise((resolve, reject) => {
+
+				let nakCount = 0;
+
+				const splitter = new SplitFrames({
+					"nak": Buffer.from([ DLE, NAK ])
+				}).on("error", reject).on("data", (chunk) => {
+
+					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+					assert.deepStrictEqual(chunk, Buffer.from([ 0x01, 0x02 ]), "The chunk is not as expected");
+
+					assert.strictEqual(nakCount, 3, "The amount of nak received is not as expected");
+
+					resolve();
+
+				}).on("nak", () => {
+					++nakCount;
+				});
+
+				splitter.write(Buffer.from([ DLE, NAK, 0x01, DLE, NAK, 0x02, DLE, NAK ]));
+
+			});
+
+		});
+
 		it("should test escaped nak", () => {
 
 			return new Promise((resolve, reject) => {
@@ -145,6 +173,40 @@ describe("nak", () => {
 				});
 
 				splitter.write(Buffer.from([ NAK, 0x21, NAK, 0x21, 0x21, NAK, 0x21, DLE, NAK, STX, 0x24, 0x25, 0x27, ETX, NAK ]));
+
+			});
+
+		});
+
+		it("should test nak with two bits and start and end tags", () => {
+
+			return new Promise((resolve, reject) => {
+
+				let nakCount = 0;
+
+				const splitter = new SplitFrames({
+					"nak": Buffer.from([ DLE, NAK ]),
+					"start": STX,
+					"end": ETX
+				}).on("error", reject).on("data", (chunk) => {
+
+					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+					assert.deepStrictEqual(chunk, Buffer.from([ 0x24, 0x25, 0x27 ]), "The chunk is not as expected");
+
+					assert.strictEqual(nakCount, 3, "The amount of nak received is not as expected");
+
+				}).on("nak", () => {
+
+					++nakCount;
+
+					if (4 === nakCount) {
+						resolve();
+					}
+
+				});
+
+				splitter.write(Buffer.from([ DLE, NAK, 0x21, DLE, NAK, 0x21, 0x21, DLE, NAK, 0x21, STX, 0x24, 0x25, 0x27, ETX, DLE, NAK ]));
 
 			});
 

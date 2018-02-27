@@ -1,6 +1,6 @@
 {
   "name": "split-frames",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Split Buffer frames from streams",
   "main": "lib/main.js",
   "scripts": {
@@ -29,6 +29,7 @@
     "STX",
     "ETX",
     "ACK",
+    "WAK",
     "NAK",
     "DLE",
     "industrial",

@@ -28,127 +28,173 @@ describe("parameters", () => {
 
 	});
 
-	it("should check with wrong start tag", () => {
+	describe("basic validations", () => {
 
-		assert.throws(() => {
-			new SplitFrames({
-				"start": "test"
-			});
-		}, Error);
+		it("should check with wrong start tag", () => {
 
-		assert.throws(() => {
-			new SplitFrames({
-				"start": [ "test" ]
-			});
-		}, Error);
+			assert.throws(() => {
+				new SplitFrames({
+					"start": "test"
+				});
+			}, Error);
 
-	});
+			assert.throws(() => {
+				new SplitFrames({
+					"start": [ "test" ]
+				});
+			}, Error);
 
-	it("should check with wrong end tag", () => {
+		});
 
-		assert.throws(() => {
-			new SplitFrames({
-				"end": "test"
-			});
-		}, Error);
+		it("should check with wrong end tag", () => {
 
-		assert.throws(() => {
-			new SplitFrames({
-				"end": [ "test" ]
-			});
-		}, Error);
+			assert.throws(() => {
+				new SplitFrames({
+					"end": "test"
+				});
+			}, Error);
 
-	});
+			assert.throws(() => {
+				new SplitFrames({
+					"end": [ "test" ]
+				});
+			}, Error);
 
-	it("should check with wrong ack tag", () => {
+		});
 
-		assert.throws(() => {
-			new SplitFrames({
-				"ack": "test"
-			});
-		}, Error);
+		it("should check with wrong ack tag", () => {
 
-		assert.throws(() => {
-			new SplitFrames({
-				"ack": [ "test" ]
-			});
-		}, Error);
+			assert.throws(() => {
+				new SplitFrames({
+					"ack": "test"
+				});
+			}, Error);
 
-	});
+			assert.throws(() => {
+				new SplitFrames({
+					"ack": [ "test" ]
+				});
+			}, Error);
 
-	it("should check with wrong nak tag", () => {
+		});
 
-		assert.throws(() => {
-			new SplitFrames({
-				"nak": "test"
-			});
-		}, Error);
+		it("should check with wrong nak tag", () => {
 
-		assert.throws(() => {
-			new SplitFrames({
-				"nak": [ "test" ]
-			});
-		}, Error);
+			assert.throws(() => {
+				new SplitFrames({
+					"nak": "test"
+				});
+			}, Error);
 
-	});
+			assert.throws(() => {
+				new SplitFrames({
+					"nak": [ "test" ]
+				});
+			}, Error);
 
-	it("should check with wrong escapeWith tag", () => {
+		});
 
-		assert.throws(() => {
-			new SplitFrames({
-				"escapeWith": "test"
-			});
-		}, Error);
+		it("should check with wrong wak tag", () => {
 
-		assert.throws(() => {
-			new SplitFrames({
-				"escapeWith": [ "test" ]
-			});
-		}, Error);
+			assert.throws(() => {
+				new SplitFrames({
+					"wak": "test"
+				});
+			}, Error);
 
-	});
+			assert.throws(() => {
+				new SplitFrames({
+					"wak": [ "test" ]
+				});
+			}, Error);
 
-	it("should check ack tag with start only", () => {
+		});
 
-		assert.throws(() => {
-			new SplitFrames({
-				"ack": ACK,
-				"start": STX
-			});
-		}, Error);
+		it("should check with wrong escapeWith tag", () => {
 
-	});
+			assert.throws(() => {
+				new SplitFrames({
+					"escapeWith": "test"
+				});
+			}, Error);
 
-	it("should check ack tag with end only", () => {
+			assert.throws(() => {
+				new SplitFrames({
+					"escapeWith": [ "test" ]
+				});
+			}, Error);
 
-		assert.throws(() => {
-			new SplitFrames({
-				"ack": ACK,
-				"end": ETX
-			});
-		}, Error);
+		});
 
 	});
 
-	it("should check nak tag with start only", () => {
+	describe("single tags validations with start and/or end", () => {
 
-		assert.throws(() => {
-			new SplitFrames({
-				"nak": NAK,
-				"start": STX
-			});
-		}, Error);
+		it("should check ack tag with start only", () => {
 
-	});
+			assert.throws(() => {
+				new SplitFrames({
+					"ack": ACK,
+					"start": STX
+				});
+			}, Error);
 
-	it("should check nak tag with end only", () => {
+		});
 
-		assert.throws(() => {
-			new SplitFrames({
-				"nak": NAK,
-				"end": ETX
-			});
-		}, Error);
+		it("should check ack tag with end only", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"ack": ACK,
+					"end": ETX
+				});
+			}, Error);
+
+		});
+
+		it("should check nak tag with start only", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"nak": NAK,
+					"start": STX
+				});
+			}, Error);
+
+		});
+
+		it("should check nak tag with end only", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"nak": NAK,
+					"end": ETX
+				});
+			}, Error);
+
+		});
+
+		it("should check wak tag with start only", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"wak": NAK,
+					"start": STX
+				});
+			}, Error);
+
+		});
+
+		it("should check wak tag with end only", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"wak": NAK,
+					"end": ETX
+				});
+			}, Error);
+
+		});
 
 	});
 
