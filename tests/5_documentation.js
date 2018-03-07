@@ -210,15 +210,19 @@ describe("documentation", () => {
 
 			let ackFound = false;
 			let nakFound = false;
+			let whateverFound = false;
 
 			const stream = createReadStream();
 
 			stream.pipe(new Splitter({
 				"start": STX,
 				"end": ETX,
-				"ack": ACK,
-				"nak": NAK,
-				"wak": WAK,
+				"specifics": {
+					"ack": ACK,
+					"nak": NAK,
+					"wak": WAK,
+					"whatever": 0x51
+				},
 				"escapeWith": DLE,
 				"escaped": [ DLE, ACK, NAK ]
 			})).on("data", (chunk) => {
@@ -231,16 +235,19 @@ describe("documentation", () => {
 				ackFound = true;
 			}).on("nak", () => {
 				nakFound = true;
+			}).on("whatever", () => {
+				whateverFound = true;
 			}).on("wak", () => {
 
-				assert.strictEqual(ackFound, true, "There is no ack found");
-				assert.strictEqual(nakFound, true, "There is no nak found");
+				assert.strictEqual(ackFound, true, "There is no \"ack\" found");
+				assert.strictEqual(nakFound, true, "There is no \"nak\" found");
+				assert.strictEqual(whateverFound, true, "There is no \"whatever\" found");
 
 				resolve();
 
 			});
 
-			stream.push(Buffer.from([ 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
+			stream.push(Buffer.from([ 0x51, 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
 			stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, WAK, DLE, WAK, 0x20, 0x21 ]));
 
 		});
