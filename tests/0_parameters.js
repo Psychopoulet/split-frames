@@ -11,10 +11,11 @@
 
 // consts
 
-	const ACK = 0x06;
-	const NAK = 0x15;
 	const STX = 0x02;
 	const ETX = 0x03;
+	const ACK = 0x06;
+	const WAK = 0x13;
+	const NAK = 0x15;
 
 // module
 
@@ -24,6 +25,16 @@ describe("parameters", () => {
 
 		assert.throws(() => {
 			new SplitFrames(false);
+		}, TypeError);
+
+	});
+
+	it("should check with inexistant option", () => {
+
+		assert.throws(() => {
+			new SplitFrames({
+				"test": "test"
+			});
 		}, Error);
 
 	});
@@ -36,13 +47,13 @@ describe("parameters", () => {
 				new SplitFrames({
 					"start": "test"
 				});
-			}, Error);
+			}, TypeError);
 
 			assert.throws(() => {
 				new SplitFrames({
 					"start": [ "test" ]
 				});
-			}, Error);
+			}, TypeError);
 
 		});
 
@@ -52,61 +63,13 @@ describe("parameters", () => {
 				new SplitFrames({
 					"end": "test"
 				});
-			}, Error);
+			}, TypeError);
 
 			assert.throws(() => {
 				new SplitFrames({
 					"end": [ "test" ]
 				});
-			}, Error);
-
-		});
-
-		it("should check with wrong ack tag", () => {
-
-			assert.throws(() => {
-				new SplitFrames({
-					"ack": "test"
-				});
-			}, Error);
-
-			assert.throws(() => {
-				new SplitFrames({
-					"ack": [ "test" ]
-				});
-			}, Error);
-
-		});
-
-		it("should check with wrong nak tag", () => {
-
-			assert.throws(() => {
-				new SplitFrames({
-					"nak": "test"
-				});
-			}, Error);
-
-			assert.throws(() => {
-				new SplitFrames({
-					"nak": [ "test" ]
-				});
-			}, Error);
-
-		});
-
-		it("should check with wrong wak tag", () => {
-
-			assert.throws(() => {
-				new SplitFrames({
-					"wak": "test"
-				});
-			}, Error);
-
-			assert.throws(() => {
-				new SplitFrames({
-					"wak": [ "test" ]
-				});
-			}, Error);
+			}, TypeError);
 
 		});
 
@@ -126,15 +89,35 @@ describe("parameters", () => {
 
 		});
 
+		it("should check with wrong specifics tag", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"specifics": "test"
+				});
+			}, Error);
+
+			assert.throws(() => {
+				new SplitFrames({
+					"specifics": {
+						"nak": "test"
+					}
+				});
+			}, Error);
+
+		});
+
 	});
 
-	describe("single tags validations with start and/or end", () => {
+	describe("specific tag validations with start and/or end", () => {
 
 		it("should check ack tag with start only", () => {
 
 			assert.throws(() => {
 				new SplitFrames({
-					"ack": ACK,
+					"specifics": {
+						"ack": ACK
+					},
 					"start": STX
 				});
 			}, Error);
@@ -145,7 +128,9 @@ describe("parameters", () => {
 
 			assert.throws(() => {
 				new SplitFrames({
-					"ack": ACK,
+					"specifics": {
+						"ack": ACK
+					},
 					"end": ETX
 				});
 			}, Error);
@@ -156,7 +141,9 @@ describe("parameters", () => {
 
 			assert.throws(() => {
 				new SplitFrames({
-					"nak": NAK,
+					"specifics": {
+						"nak": NAK
+					},
 					"start": STX
 				});
 			}, Error);
@@ -167,7 +154,9 @@ describe("parameters", () => {
 
 			assert.throws(() => {
 				new SplitFrames({
-					"nak": NAK,
+					"specifics": {
+						"nak": NAK
+					},
 					"end": ETX
 				});
 			}, Error);
@@ -178,7 +167,9 @@ describe("parameters", () => {
 
 			assert.throws(() => {
 				new SplitFrames({
-					"wak": NAK,
+					"specifics": {
+						"wak": WAK
+					},
 					"start": STX
 				});
 			}, Error);
@@ -189,7 +180,9 @@ describe("parameters", () => {
 
 			assert.throws(() => {
 				new SplitFrames({
-					"wak": NAK,
+					"specifics": {
+						"wak": WAK
+					},
 					"end": ETX
 				});
 			}, Error);
