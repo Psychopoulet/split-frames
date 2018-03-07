@@ -131,8 +131,9 @@ stream.push(Buffer.from([ STX2, 0x04, DLE, STX, 0x05, 0x06 ]));
 stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, 0x06, 0x04, 0x05 ]));
 ```
 
-### Want acknowledgement ? (positive, negative, waiting for)
+### Want to extract specific tags ?
 
+> positive acknowledgement, negative acknowledgement, waiting for acknowledgement, whatever...
 > only with no tags || start AND end tags
 
 ```javascript
@@ -140,7 +141,9 @@ const stream = createReadStream();
 
 stream.pipe(new Splitter({
 	"start": STX, "end": ETX,
-	"ack": ACK, "nak": NAK, "wak": WAK,
+	"specifics": {
+		"ack": ACK, "nak": NAK, "wak": WAK, "whatever": 0x51
+	},
 	"escapeWith": DLE, "escaped": [ DLE, ACK, NAK, WAK ]
 })).on("ack", () => {
 	console.log("ack received"); // (only 1x) -> good, escaped, in data
@@ -148,11 +151,13 @@ stream.pipe(new Splitter({
 	console.log("nak received"); // (only 1x) -> in data, good, escaped
 }).on("wak", () => {
 	console.log("wak received"); // (only 1x) -> in data, good, escaped
+}).on("whatever", () => {
+	console.log("whatever received"); // (only 1x)
 }).on("data", (chunk) => {
 	// Buffer([ 0x20, 0x21, 0x22, ACK, NAK, WAK, 0x23 ]) (x1)
 });
 
-stream.push(Buffer.from([ 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
+stream.push(Buffer.from([ 0x51, 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
 stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, WAK, DLE, WAK, 0x20, 0x21 ]));
 ```
 
