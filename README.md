@@ -43,7 +43,7 @@ const STX = 0x02, ETX = 0x03, DLE = 0x10, ACK = 0x06, NAK = 0x15, WAK = 0x13;
 const stream = createReadStream();
 
 stream.pipe(new Splitter({
-	"start": STX
+	"startWith": STX
 })).on("data", (chunk) => {
 	// Buffer([ 0x04, 0x05, 0x06 ]) (2x)
 });
@@ -58,7 +58,7 @@ stream.push(Buffer.from([ 0x06, STX ]));
 const stream = createReadStream();
 
 stream.pipe(new Splitter({
-	"end": ETX
+	"endWith": ETX
 })).on("data", (chunk) => {
 	// Buffer([ 0x01, 0x04, 0x05, 0x06 ])
 });
@@ -72,7 +72,7 @@ stream.push(Buffer.from([ 0x01, 0x04, 0x05, 0x06, ETX, 0x04, 0x05 ]));
 const stream = createReadStream();
 
 stream.pipe(new Splitter({
-	"start": STX, "end": ETX
+	"startWith": STX, "endWith": ETX
 })).on("data", (chunk) => {
 	// Buffer([ 0x04, 0x05, 0x06 ]
 });
@@ -86,7 +86,7 @@ stream.push(Buffer.from([ 0x01, STX, 0x04, 0x05, 0x06, ETX, STX, 0x04, 0x05 ]));
 const stream = createReadStream();
 
 stream.pipe(new Splitter({
-	"start": STX, "end": Buffer.from([ DLE, ETX ])
+	"startWith": STX, "endWith": Buffer.from([ DLE, ETX ])
 })).on("data", (chunk) => {
 	// Buffer([ 0x04, 0x05, 0x06 ])
 });
@@ -100,7 +100,7 @@ stream.push(Buffer.from([ 0x01, STX, 0x04, 0x05, 0x06, DLE, ETX, STX, 0x04, 0x05
 const stream = createReadStream();
 
 stream.pipe(new Splitter({
-	"start": STX, "end": ETX,
+	"startWith": STX, "endWith": ETX,
 	"escapeWith": DLE, "escaped": [ DLE, STX, ETX ]
 })).on("data", (chunk) => {
 	// Buffer([ 0x04, 0x02, 0x05, 0x06, 0x10, 0x07, 0x03, 0x08 ])
@@ -119,7 +119,7 @@ const STX2 = 0x82;
 const stream = createReadStream();
 
 stream.pipe(new Splitter({
-	"start": [ STX, STX2 ], "end": ETX,
+	"startWith": [ STX, STX2 ], "endWith": ETX,
 	"escapeWith": DLE, "escaped": [ DLE, STX, ETX ]
 })).on("data", (chunk) => {
 	// Buffer([ 0x04, 0x02, 0x05, 0x06, 0x10, 0x07, 0x03, 0x08 ]) (x2)
@@ -140,7 +140,7 @@ stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, 0x06, 0x04, 0x05 
 const stream = createReadStream();
 
 stream.pipe(new Splitter({
-	"start": STX, "end": ETX,
+	"startWith": STX, "endWith": ETX,
 	"specifics": {
 		"ack": ACK, "nak": NAK, "wak": WAK, "whatever": 0x51
 	},

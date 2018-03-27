@@ -43,7 +43,7 @@ describe("documentation", () => {
 			const stream = createReadStream();
 
 			stream.pipe(new Splitter({
-				"start": STX
+				"startWith": STX
 			})).on("data", (chunk) => {
 
 				++dataCount;
@@ -72,7 +72,7 @@ describe("documentation", () => {
 			const stream = createReadStream();
 
 			stream.pipe(new Splitter({
-				"end": ETX
+				"endWith": ETX
 			})).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
@@ -96,8 +96,8 @@ describe("documentation", () => {
 			const stream = createReadStream();
 
 			stream.pipe(new Splitter({
-				"start": STX,
-				"end": ETX
+				"startWith": STX,
+				"endWith": ETX
 			})).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
@@ -121,8 +121,8 @@ describe("documentation", () => {
 			const stream = createReadStream();
 
 			stream.pipe(new Splitter({
-				"start": STX,
-				"end": Buffer.from([ DLE, ETX ])
+				"startWith": STX,
+				"endWith": Buffer.from([ DLE, ETX ])
 			})).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
@@ -146,8 +146,8 @@ describe("documentation", () => {
 			const stream = createReadStream();
 
 			stream.pipe(new Splitter({
-				"start": STX,
-				"end": ETX,
+				"startWith": STX,
+				"endWith": ETX,
 				"escapeWith": DLE,
 				"escaped": [ DLE, STX, ETX ]
 			})).on("data", (chunk) => {
@@ -177,8 +177,8 @@ describe("documentation", () => {
 			const stream = createReadStream();
 
 			stream.pipe(new Splitter({
-				"start": [ STX, STX2 ],
-				"end": ETX,
+				"startWith": [ STX, STX2 ],
+				"endWith": ETX,
 				"escapeWith": DLE,
 				"escaped": [ DLE, STX, ETX ]
 			})).on("data", (chunk) => {
@@ -215,8 +215,8 @@ describe("documentation", () => {
 			const stream = createReadStream();
 
 			stream.pipe(new Splitter({
-				"start": STX,
-				"end": ETX,
+				"startWith": STX,
+				"endWith": ETX,
 				"specifics": {
 					"ack": ACK,
 					"nak": NAK,
