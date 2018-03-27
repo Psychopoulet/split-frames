@@ -13,15 +13,15 @@
 
 // module
 
-describe("end & start", () => {
+describe("start & end", () => {
 
 	it("should split frame with no start", () => {
 
 		return new Promise((resolve, reject) => {
 
 			const splitter = new SplitFrames({
-				"start": STX,
-				"end": ETX
+				"startWith": STX,
+				"endWith": ETX
 			}).on("error", reject).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
@@ -46,8 +46,8 @@ describe("end & start", () => {
 		return new Promise((resolve, reject) => {
 
 			const splitter = new SplitFrames({
-				"start": STX,
-				"end": ETX
+				"startWith": STX,
+				"endWith": ETX
 			}).on("error", reject).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
@@ -72,8 +72,8 @@ describe("end & start", () => {
 		return new Promise((resolve, reject) => {
 
 			new SplitFrames({
-				"start": STX,
-				"end": ETX
+				"startWith": STX,
+				"endWith": ETX
 			}).on("error", reject).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
@@ -96,8 +96,8 @@ describe("end & start", () => {
 			let dataCount = 0;
 
 			const splitter = new SplitFrames({
-				"start": STX,
-				"end": ETX
+				"startWith": STX,
+				"endWith": ETX
 			}).on("error", reject).on("data", (chunk) => {
 
 				++dataCount;
@@ -138,8 +138,8 @@ describe("end & start", () => {
 		return new Promise((resolve, reject) => {
 
 			new SplitFrames({
-				"start": STX,
-				"end": Buffer.from([ DLE, ETX ])
+				"startWith": STX,
+				"endWith": Buffer.from([ DLE, ETX ])
 			}).on("error", reject).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
@@ -160,8 +160,8 @@ describe("end & start", () => {
 		return new Promise((resolve, reject) => {
 
 			new SplitFrames({
-				"start": Buffer.from([ DLE, STX ]),
-				"end": ETX
+				"startWith": Buffer.from([ DLE, STX ]),
+				"endWith": ETX
 			}).on("error", reject).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
@@ -182,8 +182,8 @@ describe("end & start", () => {
 		return new Promise((resolve, reject) => {
 
 			new SplitFrames({
-				"start": STX,
-				"end": ETX,
+				"startWith": STX,
+				"endWith": ETX,
 				"escapeWith": DLE,
 				"escaped": [ DLE, STX, ETX ]
 			}).on("error", reject).on("data", (chunk) => {

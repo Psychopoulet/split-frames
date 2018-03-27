@@ -160,8 +160,8 @@ describe("specifics", () => {
 					"specifics": {
 						"ack": ACK
 					},
-					"start": STX,
-					"end": ETX,
+					"startWith": STX,
+					"endWith": ETX,
 					"escapeWith": DLE,
 					"escaped": [ DLE, ACK ]
 				}).on("error", reject).on("data", (chunk) => {
@@ -198,8 +198,8 @@ describe("specifics", () => {
 					"specifics": {
 						"ack": Buffer.from([ DLE, ACK ])
 					},
-					"start": STX,
-					"end": ETX
+					"startWith": STX,
+					"endWith": ETX
 				}).on("error", reject).on("data", (chunk) => {
 
 					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");

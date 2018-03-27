@@ -24,7 +24,7 @@ describe("start only", () => {
 		return new Promise((resolve, reject) => {
 
 			const splitter = new SplitFrames({
-				"start": STX
+				"startWith": STX
 			}).on("error", reject).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
@@ -50,7 +50,7 @@ describe("start only", () => {
 		return new Promise((resolve, reject) => {
 
 			const splitter = new SplitFrames({
-				"start": STX
+				"startWith": STX
 			}).on("error", reject).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
@@ -77,7 +77,7 @@ describe("start only", () => {
 			let dataCount = 0;
 
 			const splitter = new SplitFrames({
-				"start": STX
+				"startWith": STX
 			}).on("error", reject).on("data", (chunk) => {
 
 				++dataCount;
@@ -120,7 +120,7 @@ describe("start only", () => {
 			let dataCount = 0;
 
 			new SplitFrames({
-				"start": STX
+				"startWith": STX
 			}).on("error", reject).on("data", (chunk) => {
 
 				++dataCount;
@@ -159,7 +159,7 @@ describe("start only", () => {
 			let dataCount = 0;
 
 			new SplitFrames({
-				"start": Buffer.from([ DLE, STX ])
+				"startWith": Buffer.from([ DLE, STX ])
 			}).on("error", reject).on("data", (chunk) => {
 
 				++dataCount;
@@ -196,7 +196,7 @@ describe("start only", () => {
 		return new Promise((resolve, reject) => {
 
 			new SplitFrames({
-				"start": STX,
+				"startWith": STX,
 				"escapeWith": DLE,
 				"escaped": [ DLE, STX ]
 			}).on("error", reject).on("data", (chunk) => {
@@ -221,7 +221,7 @@ describe("start only", () => {
 			let dataCount = 0;
 
 			new SplitFrames({
-				"start": [ STX, STX2 ]
+				"startWith": [ STX, STX2 ]
 			}).on("error", reject).on("data", (chunk) => {
 
 				++dataCount;
@@ -265,7 +265,7 @@ describe("start only", () => {
 			let dataCount = 0;
 
 			new SplitFrames({
-				"start": [ STX, STX2 ],
+				"startWith": [ STX, STX2 ],
 				"escapeWith": DLE,
 				"escaped": [ DLE, STX, STX2 ]
 			}).on("error", reject).on("data", (chunk) => {

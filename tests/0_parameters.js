@@ -45,13 +45,13 @@ describe("parameters", () => {
 
 			assert.throws(() => {
 				new SplitFrames({
-					"start": "test"
+					"startWith": "test"
 				});
 			}, TypeError);
 
 			assert.throws(() => {
 				new SplitFrames({
-					"start": [ "test" ]
+					"startWith": [ "test" ]
 				});
 			}, TypeError);
 
@@ -61,13 +61,13 @@ describe("parameters", () => {
 
 			assert.throws(() => {
 				new SplitFrames({
-					"end": "test"
+					"endWith": "test"
 				});
 			}, TypeError);
 
 			assert.throws(() => {
 				new SplitFrames({
-					"end": [ "test" ]
+					"endWith": [ "test" ]
 				});
 			}, TypeError);
 
@@ -118,7 +118,7 @@ describe("parameters", () => {
 					"specifics": {
 						"ack": ACK
 					},
-					"start": STX
+					"startWith": STX
 				});
 			}, Error);
 
@@ -131,7 +131,7 @@ describe("parameters", () => {
 					"specifics": {
 						"ack": ACK
 					},
-					"end": ETX
+					"endWith": ETX
 				});
 			}, Error);
 
@@ -144,7 +144,7 @@ describe("parameters", () => {
 					"specifics": {
 						"nak": NAK
 					},
-					"start": STX
+					"startWith": STX
 				});
 			}, Error);
 
@@ -157,7 +157,7 @@ describe("parameters", () => {
 					"specifics": {
 						"nak": NAK
 					},
-					"end": ETX
+					"endWith": ETX
 				});
 			}, Error);
 
@@ -170,7 +170,7 @@ describe("parameters", () => {
 					"specifics": {
 						"wak": WAK
 					},
-					"start": STX
+					"startWith": STX
 				});
 			}, Error);
 
@@ -183,7 +183,7 @@ describe("parameters", () => {
 					"specifics": {
 						"wak": WAK
 					},
-					"end": ETX
+					"endWith": ETX
 				});
 			}, Error);
 

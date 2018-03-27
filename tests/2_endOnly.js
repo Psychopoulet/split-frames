@@ -23,7 +23,7 @@ describe("end only", () => {
 		return new Promise((resolve, reject) => {
 
 			const splitter = new SplitFrames({
-				"end": ETX
+				"endWith": ETX
 			}).on("error", reject).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
@@ -48,7 +48,7 @@ describe("end only", () => {
 		return new Promise((resolve, reject) => {
 
 			const splitter = new SplitFrames({
-				"end": ETX
+				"endWith": ETX
 			}).on("error", reject).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
@@ -75,7 +75,7 @@ describe("end only", () => {
 			let dataCount = 0;
 
 			const splitter = new SplitFrames({
-				"end": ETX
+				"endWith": ETX
 			}).on("error", reject).on("data", (chunk) => {
 
 				++dataCount;
@@ -118,7 +118,7 @@ describe("end only", () => {
 			let dataCount = 0;
 
 			new SplitFrames({
-				"end": ETX
+				"endWith": ETX
 			}).on("error", reject).on("data", (chunk) => {
 
 				++dataCount;
@@ -164,7 +164,7 @@ describe("end only", () => {
 			let dataCount = 0;
 
 			new SplitFrames({
-				"end": Buffer.from([ DLE, ETX ])
+				"endWith": Buffer.from([ DLE, ETX ])
 			}).on("error", reject).on("data", (chunk) => {
 
 				++dataCount;
@@ -208,7 +208,7 @@ describe("end only", () => {
 		return new Promise((resolve, reject) => {
 
 			new SplitFrames({
-				"end": ETX,
+				"endWith": ETX,
 				"escapeWith": DLE,
 				"escaped": [ DLE, ETX ]
 			}).on("error", reject).on("data", (chunk) => {
