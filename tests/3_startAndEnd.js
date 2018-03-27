@@ -74,7 +74,13 @@ describe("start & end", () => {
 			new SplitFrames({
 				"startWith": STX,
 				"endWith": ETX
-			}).on("error", reject).on("data", (chunk) => {
+			}).on("error", reject).on("fullFrame", (chunk) => {
+
+				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+				assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x04, 0x05, ETX ]), "The chunk is not as expected");
+
+			}).on("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");

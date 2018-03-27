@@ -13,8 +13,35 @@ $ npm install split-frames
 
 ## Doc
 
+> Works very well with, for example, [serialport](https://www.npmjs.com/package/serialport) for industrial protocols
+
+### Methods
+
   * inherited from [stream.Transform](https://nodejs.org/api/stream.html#stream_duplex_and_transform_streams)
-  * works very well with, for example, [serialport](https://www.npmjs.com/package/serialport) for industrial protocols
+  * constructor ([ options: object ]): split-frames instance
+
+### Options
+
+> All these options are optionnal
+
+```javascript
+iTag: number|Buffer|Array<number>
+```
+
+  * "startWith": iTag
+  * "endWith": iTag
+  * "escapeWith": iTag
+  * "escaped": Array\<iTag>
+  * "specifics": object
+
+> "specifics" is a [ key: string => value: iTag ] object which fire a "key" event when a "value" tag is found out of the message and not escaped
+
+> ex : { "specifics": { "nak": 0x03 } } will fire an "nak" event
+
+### Events
+
+  * inherited from [stream.Transform](https://nodejs.org/api/stream.html#stream_duplex_and_transform_streams)
+  * "fullFrame" (chunk: Buffer) => fire with "startWith" [ and | or ] "endWith" options, give the all escaped frame
 
 ## Examples
 
