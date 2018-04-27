@@ -25,13 +25,13 @@ $ npm install split-frames
 > All these options are optionnal
 
 ```javascript
-iTag: number|Buffer|Array<number>
+iTag: number|Buffer|Array<number|Buffer>
 ```
 
   * "startWith": iTag
   * "endWith": iTag
   * "escapeWith": iTag
-  * "escaped": Array\<iTag>
+  * "escaped": Array<iTag>
   * "specifics": object
 
 > "specifics" is a [ key: string => value: iTag ] object which fire a "key" event when a "value" tag is found out of the message and not escaped
@@ -47,7 +47,14 @@ iTag: number|Buffer|Array<number>
 
 In the following exemples, "Splitter" and "Readable" classes are defined like that :
 
+```typescript
+// typescript
+import Splitter = require("split-frames");
+import { Readable } from "stream";
+```
+
 ```javascript
+// javascript
 const Splitter = require("split-frames");
 const { Readable } = require("stream");
 ```
@@ -55,7 +62,11 @@ const { Readable } = require("stream");
 The "createReadStream" function is defined like that :
 
 ```javascript
-function createReadStream () { return new Readable({ read () { } }); }
+function createReadStream () {
+	return new Readable({
+		read () { }
+	});
+}
 ```
 
 And the "STX", "DLE" and "ETX" constants are defined like that :
