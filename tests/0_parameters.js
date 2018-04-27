@@ -8,6 +8,7 @@
 
 	const assert = require("assert");
 	const SplitFrames = require(require("path").join(__dirname, "..", "lib", "main.js"));
+	const searchUnescapedTags = require(require("path").join(__dirname, "..", "lib", "searchUnescapedTags.js"));
 
 // consts
 
@@ -18,6 +19,16 @@
 	const NAK = 0x15;
 
 // module
+
+describe("searchUnescapedTags", () => {
+
+	it("should check with wrong parameter", () => {
+
+		assert.strictEqual(searchUnescapedTags(null), -1, "wrong searchUnescapedTags found something");
+
+	});
+
+});
 
 describe("parameters", () => {
 
