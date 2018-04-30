@@ -1,6 +1,6 @@
 {
   "name": "split-frames",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Split Buffer frames from streams",
   "main": "lib/main.js",
   "typings": "lib/index.d.ts",
@@ -42,17 +42,17 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "9.6.6",
-    "gulp": "3.9.1",
-    "gulp-plumber": "1.1.0",
-    "gulp-eslint": "4.0.0",
-    "gulp-mocha": "3.0.1",
-    "gulp-istanbul": "1.1.2",
+    "@types/node": "9.6.7",
+    "gulp": "4.0.0",
     "gulp-coveralls": "0.1.4",
+    "gulp-eslint": "4.0.2",
+    "gulp-istanbul": "1.1.3",
+    "gulp-mocha": "3.0.1",
+    "gulp-plumber": "1.2.0",
     "pre-push": "0.1.1"
   },
   "homepage": "https://github.com/Psychopoulet/split-frames#readme",
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=6.0.0"
   }
 }
