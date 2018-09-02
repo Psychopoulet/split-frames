@@ -19,8 +19,6 @@
 
 // consts
 
-	const ISTRAVIS = (0, process).env.TRAVIS || false;
-
 	const APP_FILES = [ path.join(__dirname, "lib", "**", "*.js") ];
 	const UNITTESTS_FILES = [ path.join(__dirname, "tests", "**", "*.js") ];
 
@@ -74,8 +72,6 @@
 			.pipe(coveralls());
 
 	}));
-
-	gulp.task("tests", gulp.series(ISTRAVIS ? "coveralls" : "mocha"));
 
 // watcher
 
