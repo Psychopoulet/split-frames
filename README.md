@@ -14,7 +14,7 @@ $ npm install split-frames
 
 ## Doc
 
-> Works very well with, for example, [serialport](https://www.npmjs.com/package/serialport) for industrial protocols
+> Works very well with, for example, [serialport](https://www.npmjs.com/package/serialport) for industrial protocols like Concert
 
 ### Methods
 
@@ -25,7 +25,8 @@ $ npm install split-frames
 
 > All these options are optionnal
 
-```javascript
+```typescript
+type ControlBits = "none" | "start-1" | "start-2" | "start+1" | "start+2" | "end-1" | "end-2" | "end+1" | "end+2";
 iTag: number|Buffer|Array<number|Buffer>
 ```
 
@@ -34,15 +35,16 @@ iTag: number|Buffer|Array<number|Buffer>
   * "escapeWith": iTag
   * "escaped": Array<iTag>
   * "specifics": object
+  * "controlBits": ControlBits (default: "none")
 
 > "specifics" is a [ key: string => value: iTag ] object which fire a "key" event when a "value" tag is found out of the message and not escaped
 
-> ex : { "specifics": { "nak": 0x03 } } will fire an "nak" event
+> ex : { "specifics": { "nak": 0x03 } } will fire an "nak" event when 0x03 bit is encountered
 
 ### Events
 
   * inherited from [stream.Transform](https://nodejs.org/api/stream.html#stream_duplex_and_transform_streams)
-  * "fullFrame" (chunk: Buffer) => fire with "startWith" [ and | or ] "endWith" options, give the all escaped frame
+  * "fullFrame" (chunk: Buffer) => fire with "startWith" [ and | or ] "endWith" options [ and | or ] control bits, give the all escaped frame
 
 ## Examples
 
