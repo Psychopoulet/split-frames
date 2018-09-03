@@ -26,7 +26,7 @@ $ npm install split-frames
 > All these options are optionnal
 
 ```typescript
-type ControlBits = "none" | "start-1" | "start-2" | "start+1" | "start+2" | "end-1" | "end-2" | "end+1" | "end+2";
+type ControlBits = "none" | "end+1" | "end+2";
 iTag: number|Buffer|Array<number|Buffer>
 ```
 
@@ -40,11 +40,6 @@ iTag: number|Buffer|Array<number|Buffer>
 > "specifics" is a [ key: string => value: iTag ] object which fire a "key" event when a "value" tag is found out of the message and not escaped
 
 > ex : { "specifics": { "nak": 0x03 } } will fire an "nak" event when 0x03 bit is encountered
-
-### Events
-
-  * inherited from [stream.Transform](https://nodejs.org/api/stream.html#stream_duplex_and_transform_streams)
-  * "fullFrame" (chunk: Buffer) => fire with "startWith" [ and | or ] "endWith" options [ and | or ] control bits, give the all escaped frame
 
 ## Examples
 
@@ -200,6 +195,59 @@ stream.pipe(new Splitter({
 
 stream.push(Buffer.from([ 0x51, 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
 stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, WAK, DLE, WAK, 0x20, 0x21 ]));
+```
+
+### Want to use control bits ?
+
+> used to compute LRC, MSB, LSB, etc...
+> this example is for a structure like STX <data> ETX LRC, where LRC compute all <data> bits
+
+```javascript
+
+function computeLRC (frame) {
+
+	let lrc = 0x00;
+
+		for (let i = 0; i < frame.length; ++i) {
+			lrc ^= frame[i];
+		}
+
+	return lrc;
+
+}
+
+const stream = createReadStream();
+const splitter = new Splitter({
+	"startWith": STX, "endWith": ETX
+	"controlBits": "end+1"
+});
+
+splitter.on("data", function (chunk) { // not an arrow function to change "this" scope to splitter
+
+	// Buffer([ 0x20, 0x21, 0x22, 0x24 ]) (x1)
+
+	this.once("controls", (chunkControls) => {
+
+		// Buffer([ 0x07 ]) (x1)
+
+		if (computeLRC(data) === chunkControls) {
+			this.push(data);
+		}
+		else {
+			this.emit("error", new Error("not well-computed data :" + chunk.toString("hex") + "|" + chunkControls.toString("hex")));
+		}
+
+	});
+
+});
+
+stream.pipe(splitter).on("data", (chunk) => {
+
+	// Buffer([ 0x20, 0x21, 0x22, 0x24 ]) (x1)
+
+});
+
+stream.push(Buffer.from([ 0x51, 0x01, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x01 ]));
 ```
 
 ## Tests

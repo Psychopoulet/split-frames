@@ -2,7 +2,7 @@
 
 declare module "split-frames" {
 
-	type ControlBits = "none" | "start-1" | "start-2" | "start+1" | "start+2" | "end-1" | "end-2" | "end+1" | "end+2";
+	type ControlBits = "none" | "end+1" | "end+2";
 	type iTag = number | Buffer | Array<number>;
 
 	class Splitter extends require("stream").Transform {
