@@ -160,30 +160,30 @@ describe("end only", () => {
 
 	});
 
-	// it("should split frame with escaped data", () => {
+	it("should split frame with escaped data", () => {
 
-	// 	return new Promise((resolve, reject) => {
+		return new Promise((resolve, reject) => {
 
-	// 		new SplitFrames({
-	// 			"endWith": ETX,
-	// 			"escapeWith": DLE,
-	// 			"escaped": [ DLE, ETX ]
-	// 		}).once("error", reject).once("data", (chunk) => {
+			new SplitFrames({
+				"endWith": ETX,
+				"escapeWith": DLE,
+				"escaped": [ DLE, ETX ]
+			}).once("error", reject).once("data", (chunk) => {
 
-	// 			assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-	// 			assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-	// 			assert.deepStrictEqual(chunk,
-	// 				Buffer.from([ 0x14, DLE, ETX, 0x04, 0x05, DLE, DLE, 0x06, 0x07, 0x08, ETX ]),
-	// 				"The chunk is not as expected"
-	// 			);
+				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+				assert.deepStrictEqual(chunk,
+					Buffer.from([ 0x14, DLE, ETX, 0x04, 0x05, DLE, DLE, 0x06, 0x07, 0x08, DLE, DLE, ETX ]),
+					"The chunk is not as expected"
+				);
 
-	// 			resolve();
+				resolve();
 
-	// 		// tested frame
-	// 		}).write(Buffer.from([ 0x14, DLE, ETX, 0x04, 0x05, DLE, DLE, 0x06, 0x07, 0x08, DLE, DLE, ETX ]));
+			// tested frame
+			}).write(Buffer.from([ 0x14, DLE, ETX, 0x04, 0x05, DLE, DLE, 0x06, 0x07, 0x08, DLE, DLE, ETX ]));
 
-	// 	});
+		});
 
-	// });
+	});
 
 });
