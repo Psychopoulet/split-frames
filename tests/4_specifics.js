@@ -156,7 +156,7 @@ describe("specifics", () => {
 
 				let count = 0;
 
-				const splitter = new SplitFrames({
+				new SplitFrames({
 					"specifics": {
 						"ack": ACK
 					},
@@ -168,7 +168,7 @@ describe("specifics", () => {
 
 					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ 0x24, 0x25, 0x27 ]), "The chunk is not as expected");
+					assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, 0x27, ETX ]), "The chunk is not as expected");
 
 					assert.strictEqual(count, 3, "The amount of \"ack\" received is not as expected");
 
@@ -180,9 +180,7 @@ describe("specifics", () => {
 						resolve();
 					}
 
-				});
-
-				splitter.write(Buffer.from([ ACK, 0x21, ACK, 0x21, 0x21, ACK, 0x21, DLE, ACK, STX, 0x24, 0x25, 0x27, ETX, ACK ]));
+				}).write(Buffer.from([ ACK, 0x21, ACK, 0x21, 0x21, ACK, 0x21, DLE, ACK, STX, 0x24, 0x25, 0x27, ETX, ACK ]));
 
 			});
 
@@ -194,7 +192,7 @@ describe("specifics", () => {
 
 				let count = 0;
 
-				const splitter = new SplitFrames({
+				new SplitFrames({
 					"specifics": {
 						"ack": Buffer.from([ DLE, ACK ])
 					},
@@ -204,7 +202,7 @@ describe("specifics", () => {
 
 					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ 0x24, 0x25, 0x27 ]), "The chunk is not as expected");
+					assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, 0x27, ETX ]), "The chunk is not as expected");
 
 					assert.strictEqual(count, 3, "The amount of \"ack\" received is not as expected");
 
@@ -216,9 +214,7 @@ describe("specifics", () => {
 						resolve();
 					}
 
-				});
-
-				splitter.write(Buffer.from([ DLE, ACK, 0x21, DLE, ACK, 0x21, 0x21, DLE, ACK, 0x21, STX, 0x24, 0x25, 0x27, ETX, DLE, ACK ]));
+				}).write(Buffer.from([ DLE, ACK, 0x21, DLE, ACK, 0x21, 0x21, DLE, ACK, 0x21, STX, 0x24, 0x25, 0x27, ETX, DLE, ACK ]));
 
 			});
 

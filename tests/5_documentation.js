@@ -61,7 +61,7 @@ describe("documentation", () => {
 
 			});
 
-			stream.push(Buffer.from([ 0x01, STX, 0x14, 0x15, 0x16, STX, 0x14 ]));
+			stream.push(Buffer.from([ 0x14, STX, 0x14, 0x15, 0x16, STX, 0x14 ]));
 			stream.push(Buffer.from([ 0x15, STX ]));
 
 		});
@@ -102,30 +102,42 @@ describe("documentation", () => {
 
 	});
 
-// 	it("should test start & end", () => {
+	// it("should test start & end", () => {
 
-// 		return new Promise((resolve) => {
+	// 	return new Promise((resolve, reject) => {
 
-// 			const stream = createReadStream();
+	// 		let dataCount = 0;
 
-// 			stream.pipe(new Splitter({
-// 				"startWith": STX,
-// 				"endWith": ETX
-// 			})).on("data", (chunk) => {
+	// 		const stream = createReadStream();
 
-// 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-// 				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-// 				assert.deepStrictEqual(chunk, Buffer.from([ 0x04, 0x05, 0x06 ]), "The chunk is not as expected");
+	// 		stream.pipe(new Splitter({
+	// 			"startWith": STX,
+	// 			"endWith": ETX
+	// 		})).once("error", reject).on("data", (chunk) => {
 
-// 				resolve();
+	// 			(0, console).log(chunk);
 
-// 			});
+	// 			++dataCount;
 
-// 			stream.push(Buffer.from([ 0x01, STX, 0x04, 0x05, 0x06, ETX, STX, 0x04, 0x05 ]));
+	// 			assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+	// 			assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
 
-// 		});
+	// 			if (1 === dataCount) {
+	// 				assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x14, 0x15, 0x16, ETX ]), "The chunk is not as expected");
+	// 			}
+	// 			else if (2 === dataCount) {
+	// 				assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x14, 0x15, ETX ]), "The chunk is not as expected");
+	// 				resolve();
+	// 			}
 
-// 	});
+	// 		});
+
+	// 		stream.push(Buffer.from([ 0x14, STX, 0x14, 0x15, 0x16, ETX, 0x04, 0x05, STX ]));
+	// 		stream.push(Buffer.from([ 0x14, 0x15, ETX ]));
+
+	// 	});
+
+	// });
 
 // 	it("should test start & escaped end", () => {
 

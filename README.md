@@ -106,25 +106,6 @@ stream.push(Buffer.from([ 0x14, 0x15, 0x16, ETX, 0x14, 0x15 ]));
 stream.push(Buffer.from([ ETX ]));
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### want both ?
 
 ```javascript
@@ -140,6 +121,25 @@ stream.pipe(new Splitter({
 stream.push(Buffer.from([ 0x01, STX, 0x14, 0x15, 0x16, ETX, 0x04, 0x05, STX ]));
 stream.push(Buffer.from([ 0x14, 0x15, ETX ]));
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### what about two end bits (works with start one as well) ?
 
