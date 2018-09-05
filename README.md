@@ -15,7 +15,7 @@ $ npm install split-frames
 ## Doc
 
 > Works very well with, for example, [serialport](https://www.npmjs.com/package/serialport) for industrial protocols like Concert
-> /!\ this version only split frames properly, and does not remove start & end tags
+> /!\ this version only split frames properly, and does not remove start & end tags or escape bits anymore.
 
 ### Methods
 

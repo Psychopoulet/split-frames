@@ -32,7 +32,10 @@
     "NAK",
     "DLE",
     "industrial",
-    "protocol"
+    "protocol",
+    "LRC",
+    "MSB",
+    "LSB"
   ],
   "author": "Sébastien VIDAL",
   "license": "ISC",
