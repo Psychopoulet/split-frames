@@ -22,7 +22,7 @@ describe("without tags", () => {
 
 		return new Promise((resolve, reject) => {
 
-			new SplitFrames().on("error", reject).on("data", (chunk) => {
+			new SplitFrames().once("error", reject).once("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
@@ -40,7 +40,7 @@ describe("without tags", () => {
 
 		return new Promise((resolve, reject) => {
 
-			const splitter = new SplitFrames().on("error", reject).on("data", (chunk) => {
+			const splitter = new SplitFrames().once("error", reject).once("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
@@ -64,11 +64,11 @@ describe("without tags", () => {
 			new SplitFrames({
 				"escapeWith": DLE,
 				"escaped": [ DLE, STX ]
-			}).on("error", reject).on("data", (chunk) => {
+			}).once("error", reject).once("data", (chunk) => {
 
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-				assert.deepStrictEqual(chunk, Buffer.from([ 0x01, DLE, 0x04, 0x05, DLE, 0x06, 0x07, STX ]), "The chunk is not as expected");
+				assert.deepStrictEqual(chunk, Buffer.from([ 0x01, DLE, 0x04, 0x05, DLE, DLE, 0x06, 0x07, DLE, STX ]), "The chunk is not as expected");
 
 				resolve();
 

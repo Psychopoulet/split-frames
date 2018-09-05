@@ -14,7 +14,8 @@ $ npm install split-frames
 
 ## Doc
 
-> Works very well with, for example, [serialport](https://www.npmjs.com/package/serialport) for industrial protocols
+> Works very well with, for example, [serialport](https://www.npmjs.com/package/serialport) for industrial protocols like Concert
+> /!\ this version only split frames properly, and does not remove start & end tags or escape bits anymore.
 
 ### Methods
 
@@ -25,24 +26,21 @@ $ npm install split-frames
 
 > All these options are optionnal
 
-```javascript
-iTag: number|Buffer|Array<number|Buffer>
+```typescript
+type ControlBits = "none" | "end+1" | "end+2";
+type Tag: number | Buffer | Array<number | Buffer>
 ```
 
-  * "startWith": iTag
-  * "endWith": iTag
-  * "escapeWith": iTag
-  * "escaped": Array<iTag>
+  * "startWith": Tag
+  * "endWith": Tag
+  * "escapeWith": Tag
+  * "escaped": Array<Tag>
   * "specifics": object
+  * "controlBits": ControlBits (default: "none")
 
-> "specifics" is a [ key: string => value: iTag ] object which fire a "key" event when a "value" tag is found out of the message and not escaped
+> "specifics" is a [ key: string => value: Tag ] object which fire a "key" event when a "value" tag is found out of the message and not escaped
 
-> ex : { "specifics": { "nak": 0x03 } } will fire an "nak" event
-
-### Events
-
-  * inherited from [stream.Transform](https://nodejs.org/api/stream.html#stream_duplex_and_transform_streams)
-  * "fullFrame" (chunk: Buffer) => fire with "startWith" [ and | or ] "endWith" options, give the all escaped frame
+> ex : { "specifics": { "nak": 0x25 } } will fire an "nak" event when 0x25 bit is encountered
 
 ## Examples
 
@@ -84,11 +82,12 @@ const stream = createReadStream();
 stream.pipe(new Splitter({
 	"startWith": STX
 })).on("data", (chunk) => {
-	// Buffer([ 0x04, 0x05, 0x06 ]) (2x)
+	// Buffer([ STX, 0x24, 0x25, 0x26 ])
+	// Buffer([ STX, 0x24, 0x25 ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x04, 0x05, 0x06, STX, 0x04, 0x05 ]));
-stream.push(Buffer.from([ 0x06, STX ]));
+stream.push(Buffer.from([ 0x20, STX, 0x24, 0x25, 0x26, STX, 0x24 ]));
+stream.push(Buffer.from([ 0x25, STX ]));
 ```
 
 ### prefere an end bit ?
@@ -99,10 +98,12 @@ const stream = createReadStream();
 stream.pipe(new Splitter({
 	"endWith": ETX
 })).on("data", (chunk) => {
-	// Buffer([ 0x01, 0x04, 0x05, 0x06 ])
+	// Buffer([ 0x24, 0x25, 0x26, ETX ])
+	// Buffer([ 0x24, 0x25, ETX ])
 });
 
-stream.push(Buffer.from([ 0x01, 0x04, 0x05, 0x06, ETX, 0x04, 0x05 ]));
+stream.push(Buffer.from([ 0x24, 0x25, 0x26, ETX, 0x24, 0x25 ]));
+stream.push(Buffer.from([ ETX ]));
 ```
 
 ### want both ?
@@ -113,10 +114,12 @@ const stream = createReadStream();
 stream.pipe(new Splitter({
 	"startWith": STX, "endWith": ETX
 })).on("data", (chunk) => {
-	// Buffer([ 0x04, 0x05, 0x06 ]
+	// Buffer([ STX, 0x24, 0x25, 0x26, ETX ])
+	// Buffer([ STX, 0x24, 0x25, ETX ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x04, 0x05, 0x06, ETX, STX, 0x04, 0x05 ]));
+stream.push(Buffer.from([ 0x20, STX, 0x24, 0x25, 0x26, ETX, 0x24, 0x25, STX ]));
+stream.push(Buffer.from([ 0x24, 0x25, ETX ]));
 ```
 
 ### what about two end bits (works with start one as well) ?
@@ -127,10 +130,10 @@ const stream = createReadStream();
 stream.pipe(new Splitter({
 	"startWith": STX, "endWith": Buffer.from([ DLE, ETX ])
 })).on("data", (chunk) => {
-	// Buffer([ 0x04, 0x05, 0x06 ])
+	// Buffer([ STX, 0x24, 0x25, 0x26, DLE, ETX ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x04, 0x05, 0x06, DLE, ETX, STX, 0x04, 0x05 ]));
+stream.push(Buffer.from([ 0x20, STX, 0x24, 0x25, 0x26, DLE, ETX, STX, 0x24, 0x25 ]));
 ```
 
 ### Do you need to parse escaped bits ?
@@ -142,11 +145,11 @@ stream.pipe(new Splitter({
 	"startWith": STX, "endWith": ETX,
 	"escapeWith": DLE, "escaped": [ DLE, STX, ETX ]
 })).on("data", (chunk) => {
-	// Buffer([ 0x04, 0x02, 0x05, 0x06, 0x10, 0x07, 0x03, 0x08 ])
+	// Buffer([ STX, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x27, DLE, ETX, 0x28, ETX ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x04, DLE, STX, 0x05, 0x06 ]));
-stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, STX, 0x04, 0x05 ]));
+stream.push(Buffer.from([ 0x20, STX, 0x24, DLE, STX, 0x25, 0x26 ]));
+stream.push(Buffer.from([ DLE, DLE, 0x27, DLE, ETX, 0x28, ETX, STX, 0x24, 0x25 ]));
 ```
 
 ### And what do you think about multiple start (or end !) bits possibilities ?
@@ -161,13 +164,14 @@ stream.pipe(new Splitter({
 	"startWith": [ STX, STX2 ], "endWith": ETX,
 	"escapeWith": DLE, "escaped": [ DLE, STX, ETX ]
 })).on("data", (chunk) => {
-	// Buffer([ 0x04, 0x02, 0x05, 0x06, 0x10, 0x07, 0x03, 0x08 ]) (x2)
+	// Buffer([ STX, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x27, DLE, ETX, 0x28, ETX ])
+	// Buffer([ STX2, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x27, DLE, ETX, 0x28, ETX ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x04, DLE, STX, 0x05, 0x06 ]));
-stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, 0x06, 0x04, 0x05 ]));
-stream.push(Buffer.from([ STX2, 0x04, DLE, STX, 0x05, 0x06 ]));
-stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, 0x06, 0x04, 0x05 ]));
+stream.push(Buffer.from([ 0x24, STX, 0x24, DLE, STX, 0x25, ACK ]));
+stream.push(Buffer.from([ DLE, DLE, 0x27, DLE, ETX, 0x28, ETX, ACK, 0x24, 0x25 ]));
+stream.push(Buffer.from([ STX2, 0x24, DLE, STX, 0x25, ACK ]));
+stream.push(Buffer.from([ DLE, DLE, 0x27, DLE, ETX, 0x28, ETX, ACK, 0x24, 0x25 ]));
 ```
 
 ### Want to extract specific tags ?
@@ -193,11 +197,54 @@ stream.pipe(new Splitter({
 }).on("whatever", () => {
 	console.log("whatever received"); // (only 1x)
 }).on("data", (chunk) => {
-	// Buffer([ 0x20, 0x21, 0x22, ACK, NAK, WAK, 0x23 ]) (x1)
+	// Buffer([ STX, 0x20, 0x21, 0x22, ACK, NAK, WAK, 0x23, ETX ]) (x1)
 });
 
-stream.push(Buffer.from([ 0x51, 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
+stream.push(Buffer.from([ 0x51, 0x24, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
 stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, WAK, DLE, WAK, 0x20, 0x21 ]));
+```
+
+### Want to use control bits ?
+
+> used to compute LRC, MSB, LSB, etc...
+> this example is for a structure like STX <data> ETX LRC, where LRC compute all <data> bits
+
+```javascript
+
+function computeLRC (frame) {
+
+	let lrc = 0x00;
+
+		for (let i = 0; i < frame.length; ++i) {
+			lrc ^= frame[i];
+		}
+
+	return lrc;
+
+}
+
+const stream = createReadStream();
+
+stream.pipe(new Splitter({
+	"startWith": STX, "endWith": ETX,
+	"controlBits": "end+1"
+})).on("data", (chunk) => {
+
+	// Buffer([ STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07 ]) (x1)
+
+	const data = chunk.slice(1, chunk.length - 2); // Buffer([ 0x20, 0x21, 0x22, 0x24 ])
+	const LRC = chunk[chunk.length - 1];
+
+	if (_computeLRC(data) === LRC) {
+		console.log("OK");
+	}
+	else {
+		console.error(new Error("not well-computed data :" + data.toString("hex") + "|" + Buffer.from([ LRC ]).toString("hex")));
+	}
+
+});
+
+stream.push(Buffer.from([ 0x51, 0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24 ]));
 ```
 
 ## Tests

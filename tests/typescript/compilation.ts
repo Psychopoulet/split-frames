@@ -19,7 +19,8 @@ stream.pipe(new Splitter({
         "whatever": 0x51
     },
     "escapeWith": DLE,
-    "escaped": [ DLE, ACK, NAK, WAK ]
+    "escaped": [ DLE, ACK, NAK, WAK ],
+    "controlBits": "end+1"
 })).on("ack", () => {
     console.log("ack received"); // (only 1x) -> good, escaped, in data
 }).on("nak", () => {
@@ -30,8 +31,8 @@ stream.pipe(new Splitter({
     console.log("whatever received"); // (only 1x)
 }).on("data", (chunk) => {
 	console.log(chunk);
-    // Buffer([ 0x20, 0x21, 0x22, ACK, NAK, WAK, 0x23 ]) (x1)
+    // Buffer([ STX, 0x20, 0x21, 0x22, ACK, NAK, WAK, 0x23, ETX, 0x01 ]) (x1)
 });
  
 stream.push(Buffer.from([ 0x51, 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
-stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, WAK, DLE, WAK, 0x20, 0x21 ]));
+stream.push(Buffer.from([ 0x23, ETX, 0x01, NAK, DLE, NAK, WAK, DLE, WAK, 0x20, 0x21 ]));
