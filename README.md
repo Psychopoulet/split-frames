@@ -15,6 +15,7 @@ $ npm install split-frames
 ## Doc
 
 > Works very well with, for example, [serialport](https://www.npmjs.com/package/serialport) for industrial protocols like Concert
+> /!\ this version only split frames properly, and does not remove start & end tags
 
 ### Methods
 
@@ -27,19 +28,19 @@ $ npm install split-frames
 
 ```typescript
 type ControlBits = "none" | "end+1" | "end+2";
-iTag: number|Buffer|Array<number|Buffer>
+type Tag: number | Buffer | Array<number | Buffer>
 ```
 
-  * "startWith": iTag
-  * "endWith": iTag
-  * "escapeWith": iTag
-  * "escaped": Array<iTag>
+  * "startWith": Tag
+  * "endWith": Tag
+  * "escapeWith": Tag
+  * "escaped": Array<Tag>
   * "specifics": object
   * "controlBits": ControlBits (default: "none")
 
-> "specifics" is a [ key: string => value: iTag ] object which fire a "key" event when a "value" tag is found out of the message and not escaped
+> "specifics" is a [ key: string => value: Tag ] object which fire a "key" event when a "value" tag is found out of the message and not escaped
 
-> ex : { "specifics": { "nak": 0x03 } } will fire an "nak" event when 0x03 bit is encountered
+> ex : { "specifics": { "nak": 0x15 } } will fire an "nak" event when 0x15 bit is encountered
 
 ## Examples
 
@@ -81,11 +82,12 @@ const stream = createReadStream();
 stream.pipe(new Splitter({
 	"startWith": STX
 })).on("data", (chunk) => {
-	// Buffer([ 0x04, 0x05, 0x06 ]) (2x)
+	// Buffer([ STX, 0x14, 0x15, 0x16 ])
+	// Buffer([ STX, 0x14, 0x15 ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x04, 0x05, 0x06, STX, 0x04, 0x05 ]));
-stream.push(Buffer.from([ 0x06, STX ]));
+stream.push(Buffer.from([ 0x01, STX, 0x14, 0x15, 0x16, STX, 0x14 ]));
+stream.push(Buffer.from([ 0x15, STX ]));
 ```
 
 ### prefere an end bit ?
@@ -96,11 +98,32 @@ const stream = createReadStream();
 stream.pipe(new Splitter({
 	"endWith": ETX
 })).on("data", (chunk) => {
-	// Buffer([ 0x01, 0x04, 0x05, 0x06 ])
+	// Buffer([ 0x14, 0x15, 0x16, ETX ])
+	// Buffer([ 0x14, 0x15, ETX ])
 });
 
-stream.push(Buffer.from([ 0x01, 0x04, 0x05, 0x06, ETX, 0x04, 0x05 ]));
+stream.push(Buffer.from([ 0x14, 0x15, 0x16, ETX, 0x14, 0x15 ]));
+stream.push(Buffer.from([ ETX ]));
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### want both ?
 
@@ -110,10 +133,12 @@ const stream = createReadStream();
 stream.pipe(new Splitter({
 	"startWith": STX, "endWith": ETX
 })).on("data", (chunk) => {
-	// Buffer([ 0x04, 0x05, 0x06 ]
+	// Buffer([ STX, 0x14, 0x15, 0x16, ETX ])
+	// Buffer([ STX, 0x14, 0x15, ETX ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x04, 0x05, 0x06, ETX, STX, 0x04, 0x05 ]));
+stream.push(Buffer.from([ 0x01, STX, 0x14, 0x15, 0x16, ETX, 0x04, 0x05, STX ]));
+stream.push(Buffer.from([ 0x14, 0x15, ETX ]));
 ```
 
 ### what about two end bits (works with start one as well) ?
@@ -124,10 +149,10 @@ const stream = createReadStream();
 stream.pipe(new Splitter({
 	"startWith": STX, "endWith": Buffer.from([ DLE, ETX ])
 })).on("data", (chunk) => {
-	// Buffer([ 0x04, 0x05, 0x06 ])
+	// Buffer([ STX, 0x14, 0x15, 0x16, DLE, ETX ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x04, 0x05, 0x06, DLE, ETX, STX, 0x04, 0x05 ]));
+stream.push(Buffer.from([ 0x01, STX, 0x14, 0x15, 0x16, DLE, ETX, 0x04, 0x05 ]));
 ```
 
 ### Do you need to parse escaped bits ?
@@ -139,10 +164,10 @@ stream.pipe(new Splitter({
 	"startWith": STX, "endWith": ETX,
 	"escapeWith": DLE, "escaped": [ DLE, STX, ETX ]
 })).on("data", (chunk) => {
-	// Buffer([ 0x04, 0x02, 0x05, 0x06, 0x10, 0x07, 0x03, 0x08 ])
+	// Buffer([ STX, 0x14, STX, 0x05, ACK, DLE, 0x07, ETX, 0x08 ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x04, DLE, STX, 0x05, 0x06 ]));
+stream.push(Buffer.from([ 0x01, STX, 0x14, DLE, STX, 0x05, ACK ]));
 stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, STX, 0x04, 0x05 ]));
 ```
 
@@ -158,13 +183,13 @@ stream.pipe(new Splitter({
 	"startWith": [ STX, STX2 ], "endWith": ETX,
 	"escapeWith": DLE, "escaped": [ DLE, STX, ETX ]
 })).on("data", (chunk) => {
-	// Buffer([ 0x04, 0x02, 0x05, 0x06, 0x10, 0x07, 0x03, 0x08 ]) (x2)
+	// Buffer([ 0x04, STX, 0x05, ACK, DLE, 0x07, ETX, 0x08 ]) (x2)
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x04, DLE, STX, 0x05, 0x06 ]));
-stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, 0x06, 0x04, 0x05 ]));
-stream.push(Buffer.from([ STX2, 0x04, DLE, STX, 0x05, 0x06 ]));
-stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, 0x06, 0x04, 0x05 ]));
+stream.push(Buffer.from([ 0x01, STX, 0x04, DLE, STX, 0x05, ACK ]));
+stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, ACK, 0x04, 0x05 ]));
+stream.push(Buffer.from([ STX2, 0x04, DLE, STX, 0x05, ACK ]));
+stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, ACK, 0x04, 0x05 ]));
 ```
 
 ### Want to extract specific tags ?

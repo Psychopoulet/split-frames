@@ -1,205 +1,205 @@
-/*
-	eslint no-new: 0
-*/
+// /*
+// 	eslint no-new: 0
+// */
 
-"use strict";
+// "use strict";
 
-// deps
+// // deps
 
-	const assert = require("assert");
-	const SplitFrames = require(require("path").join(__dirname, "..", "lib", "main.js"));
-	const searchUnescapedTags = require(require("path").join(__dirname, "..", "lib", "searchUnescapedTags.js"));
+// 	const assert = require("assert");
+// 	const SplitFrames = require(require("path").join(__dirname, "..", "lib", "main.js"));
+// 	const searchUnescapedTags = require(require("path").join(__dirname, "..", "lib", "searchers", "searchUnescapedTags.js"));
 
-// consts
+// // consts
 
-	const STX = 0x02;
-	const ETX = 0x03;
-	const ACK = 0x06;
-	const WAK = 0x13;
-	const NAK = 0x15;
+// 	const STX = 0x02;
+// 	const ETX = 0x03;
+// 	const ACK = 0x06;
+// 	const WAK = 0x13;
+// 	const NAK = 0x15;
 
-// module
+// // module
 
-describe("searchUnescapedTags", () => {
+// describe("searchUnescapedTags", () => {
 
-	it("should check with wrong parameter", () => {
+// 	it("should check with wrong parameter", () => {
 
-		assert.strictEqual(searchUnescapedTags(null), -1, "wrong searchUnescapedTags found something");
+// 		assert.strictEqual(searchUnescapedTags(null), -1, "wrong searchUnescapedTags found something");
 
-	});
+// 	});
 
-});
+// });
 
-describe("parameters", () => {
+// describe("parameters", () => {
 
-	it("should check with wrong options", () => {
+// 	it("should check with wrong options", () => {
 
-		assert.throws(() => {
-			new SplitFrames(false);
-		}, TypeError);
+// 		assert.throws(() => {
+// 			new SplitFrames(false);
+// 		}, TypeError);
 
-	});
+// 	});
 
-	it("should check with inexistant option", () => {
+// 	it("should check with inexistant option", () => {
 
-		assert.throws(() => {
-			new SplitFrames({
-				"test": "test"
-			});
-		}, Error);
+// 		assert.throws(() => {
+// 			new SplitFrames({
+// 				"test": "test"
+// 			});
+// 		}, Error);
 
-	});
+// 	});
 
-	describe("basic validations", () => {
+// 	describe("basic validations", () => {
 
-		it("should check with wrong start tag", () => {
+// 		it("should check with wrong start tag", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"startWith": "test"
-				});
-			}, TypeError);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"startWith": "test"
+// 				});
+// 			}, TypeError);
 
-			assert.throws(() => {
-				new SplitFrames({
-					"startWith": [ "test" ]
-				});
-			}, TypeError);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"startWith": [ "test" ]
+// 				});
+// 			}, TypeError);
 
-		});
+// 		});
 
-		it("should check with wrong end tag", () => {
+// 		it("should check with wrong end tag", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"endWith": "test"
-				});
-			}, TypeError);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"endWith": "test"
+// 				});
+// 			}, TypeError);
 
-			assert.throws(() => {
-				new SplitFrames({
-					"endWith": [ "test" ]
-				});
-			}, TypeError);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"endWith": [ "test" ]
+// 				});
+// 			}, TypeError);
 
-		});
+// 		});
 
-		it("should check with wrong escapeWith tag", () => {
+// 		it("should check with wrong escapeWith tag", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"escapeWith": "test"
-				});
-			}, Error);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"escapeWith": "test"
+// 				});
+// 			}, Error);
 
-			assert.throws(() => {
-				new SplitFrames({
-					"escapeWith": [ "test" ]
-				});
-			}, Error);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"escapeWith": [ "test" ]
+// 				});
+// 			}, Error);
 
-		});
+// 		});
 
-		it("should check with wrong specifics tag", () => {
+// 		it("should check with wrong specifics tag", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"specifics": "test"
-				});
-			}, Error);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"specifics": "test"
+// 				});
+// 			}, Error);
 
-			assert.throws(() => {
-				new SplitFrames({
-					"specifics": {
-						"nak": "test"
-					}
-				});
-			}, Error);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"specifics": {
+// 						"nak": "test"
+// 					}
+// 				});
+// 			}, Error);
 
-		});
+// 		});
 
-	});
+// 	});
 
-	describe("specific tag validations with start and/or end", () => {
+// 	describe("specific tag validations with start and/or end", () => {
 
-		it("should check ack tag with start only", () => {
+// 		it("should check ack tag with start only", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"specifics": {
-						"ack": ACK
-					},
-					"startWith": STX
-				});
-			}, Error);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"specifics": {
+// 						"ack": ACK
+// 					},
+// 					"startWith": STX
+// 				});
+// 			}, Error);
 
-		});
+// 		});
 
-		it("should check ack tag with end only", () => {
+// 		it("should check ack tag with end only", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"specifics": {
-						"ack": ACK
-					},
-					"endWith": ETX
-				});
-			}, Error);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"specifics": {
+// 						"ack": ACK
+// 					},
+// 					"endWith": ETX
+// 				});
+// 			}, Error);
 
-		});
+// 		});
 
-		it("should check nak tag with start only", () => {
+// 		it("should check nak tag with start only", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"specifics": {
-						"nak": NAK
-					},
-					"startWith": STX
-				});
-			}, Error);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"specifics": {
+// 						"nak": NAK
+// 					},
+// 					"startWith": STX
+// 				});
+// 			}, Error);
 
-		});
+// 		});
 
-		it("should check nak tag with end only", () => {
+// 		it("should check nak tag with end only", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"specifics": {
-						"nak": NAK
-					},
-					"endWith": ETX
-				});
-			}, Error);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"specifics": {
+// 						"nak": NAK
+// 					},
+// 					"endWith": ETX
+// 				});
+// 			}, Error);
 
-		});
+// 		});
 
-		it("should check wak tag with start only", () => {
+// 		it("should check wak tag with start only", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"specifics": {
-						"wak": WAK
-					},
-					"startWith": STX
-				});
-			}, Error);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"specifics": {
+// 						"wak": WAK
+// 					},
+// 					"startWith": STX
+// 				});
+// 			}, Error);
 
-		});
+// 		});
 
-		it("should check wak tag with end only", () => {
+// 		it("should check wak tag with end only", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"specifics": {
-						"wak": WAK
-					},
-					"endWith": ETX
-				});
-			}, Error);
+// 			assert.throws(() => {
+// 				new SplitFrames({
+// 					"specifics": {
+// 						"wak": WAK
+// 					},
+// 					"endWith": ETX
+// 				});
+// 			}, Error);
 
-		});
+// 		});
 
-	});
+// 	});
 
-});
+// });
