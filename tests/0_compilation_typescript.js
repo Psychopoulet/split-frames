@@ -1,37 +1,37 @@
 
-// "use strict";
+"use strict";
 
-// // deps
+// deps
 
-// 	const { exec } = require("child_process");
-// 	const { join } = require("path");
-// 	const { unlink } = require("fs");
+	const { exec } = require("child_process");
+	const { join } = require("path");
+	const { unlink } = require("fs");
 
-// // consts
+// consts
 
-// 	const MAX_TIMEOUT = 10000;
+	const MAX_TIMEOUT = 10000;
 
-// // tests
+// tests
 
-// describe("compilation typescript", () => {
+describe("compilation typescript", () => {
 
-// 	after((done) => {
+	after((done) => {
 
-// 		unlink(join(__dirname, "typescript", "compilation.js"), (err) => {
-// 			return err ? done(err) : done();
-// 		});
+		unlink(join(__dirname, "typescript", "compilation.js"), (err) => {
+			return err ? done(err) : done();
+		});
 
-// 	});
+	});
 
-// 	it("should compile typescript file", (done) => {
+	it("should compile typescript file", (done) => {
 
-// 		exec("tsc " + join(__dirname, "typescript", "compilation.ts"), {
-// 			"cwd": join(__dirname, ".."),
-// 			"windowsHide": true
-// 		}, (err) => {
-// 			return err ? done(err) : done();
-// 		});
+		exec("tsc " + join(__dirname, "typescript", "compilation.ts"), {
+			"cwd": join(__dirname, ".."),
+			"windowsHide": true
+		}, (err) => {
+			return err ? done(err) : done();
+		});
 
-// 	}).timeout(MAX_TIMEOUT);
+	}).timeout(MAX_TIMEOUT);
 
-// });
+});
