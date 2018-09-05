@@ -191,4 +191,28 @@ describe("parameters", () => {
 
 	});
 
+	describe("control bits", () => {
+
+		it("should check controlBits type", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"controlBits": false
+				});
+			}, Error);
+
+		});
+
+		it("should check controlBits value", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"controlBits": "end+3"
+				});
+			}, Error);
+
+		});
+
+	});
+
 });

@@ -40,7 +40,7 @@ type Tag: number | Buffer | Array<number | Buffer>
 
 > "specifics" is a [ key: string => value: Tag ] object which fire a "key" event when a "value" tag is found out of the message and not escaped
 
-> ex : { "specifics": { "nak": 0x15 } } will fire an "nak" event when 0x15 bit is encountered
+> ex : { "specifics": { "nak": 0x25 } } will fire an "nak" event when 0x25 bit is encountered
 
 ## Examples
 
@@ -82,12 +82,12 @@ const stream = createReadStream();
 stream.pipe(new Splitter({
 	"startWith": STX
 })).on("data", (chunk) => {
-	// Buffer([ STX, 0x14, 0x15, 0x16 ])
-	// Buffer([ STX, 0x14, 0x15 ])
+	// Buffer([ STX, 0x24, 0x25, 0x26 ])
+	// Buffer([ STX, 0x24, 0x25 ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x14, 0x15, 0x16, STX, 0x14 ]));
-stream.push(Buffer.from([ 0x15, STX ]));
+stream.push(Buffer.from([ 0x20, STX, 0x24, 0x25, 0x26, STX, 0x24 ]));
+stream.push(Buffer.from([ 0x25, STX ]));
 ```
 
 ### prefere an end bit ?
@@ -98,11 +98,11 @@ const stream = createReadStream();
 stream.pipe(new Splitter({
 	"endWith": ETX
 })).on("data", (chunk) => {
-	// Buffer([ 0x14, 0x15, 0x16, ETX ])
-	// Buffer([ 0x14, 0x15, ETX ])
+	// Buffer([ 0x24, 0x25, 0x26, ETX ])
+	// Buffer([ 0x24, 0x25, ETX ])
 });
 
-stream.push(Buffer.from([ 0x14, 0x15, 0x16, ETX, 0x14, 0x15 ]));
+stream.push(Buffer.from([ 0x24, 0x25, 0x26, ETX, 0x24, 0x25 ]));
 stream.push(Buffer.from([ ETX ]));
 ```
 
@@ -114,32 +114,13 @@ const stream = createReadStream();
 stream.pipe(new Splitter({
 	"startWith": STX, "endWith": ETX
 })).on("data", (chunk) => {
-	// Buffer([ STX, 0x14, 0x15, 0x16, ETX ])
-	// Buffer([ STX, 0x14, 0x15, ETX ])
+	// Buffer([ STX, 0x24, 0x25, 0x26, ETX ])
+	// Buffer([ STX, 0x24, 0x25, ETX ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x14, 0x15, 0x16, ETX, 0x04, 0x05, STX ]));
-stream.push(Buffer.from([ 0x14, 0x15, ETX ]));
+stream.push(Buffer.from([ 0x20, STX, 0x24, 0x25, 0x26, ETX, 0x24, 0x25, STX ]));
+stream.push(Buffer.from([ 0x24, 0x25, ETX ]));
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ### what about two end bits (works with start one as well) ?
 
@@ -149,10 +130,10 @@ const stream = createReadStream();
 stream.pipe(new Splitter({
 	"startWith": STX, "endWith": Buffer.from([ DLE, ETX ])
 })).on("data", (chunk) => {
-	// Buffer([ STX, 0x14, 0x15, 0x16, DLE, ETX ])
+	// Buffer([ STX, 0x24, 0x25, 0x26, DLE, ETX ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x14, 0x15, 0x16, DLE, ETX, 0x04, 0x05 ]));
+stream.push(Buffer.from([ 0x20, STX, 0x24, 0x25, 0x26, DLE, ETX, STX, 0x24, 0x25 ]));
 ```
 
 ### Do you need to parse escaped bits ?
@@ -164,11 +145,11 @@ stream.pipe(new Splitter({
 	"startWith": STX, "endWith": ETX,
 	"escapeWith": DLE, "escaped": [ DLE, STX, ETX ]
 })).on("data", (chunk) => {
-	// Buffer([ STX, 0x14, STX, 0x05, ACK, DLE, 0x07, ETX, 0x08 ])
+	// Buffer([ STX, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x27, DLE, ETX, 0x28, ETX ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x14, DLE, STX, 0x05, ACK ]));
-stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, STX, 0x04, 0x05 ]));
+stream.push(Buffer.from([ 0x20, STX, 0x24, DLE, STX, 0x25, 0x26 ]));
+stream.push(Buffer.from([ DLE, DLE, 0x27, DLE, ETX, 0x28, ETX, STX, 0x24, 0x25 ]));
 ```
 
 ### And what do you think about multiple start (or end !) bits possibilities ?
@@ -183,13 +164,14 @@ stream.pipe(new Splitter({
 	"startWith": [ STX, STX2 ], "endWith": ETX,
 	"escapeWith": DLE, "escaped": [ DLE, STX, ETX ]
 })).on("data", (chunk) => {
-	// Buffer([ 0x04, STX, 0x05, ACK, DLE, 0x07, ETX, 0x08 ]) (x2)
+	// Buffer([ STX, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x27, DLE, ETX, 0x28, ETX ])
+	// Buffer([ STX2, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x27, DLE, ETX, 0x28, ETX ])
 });
 
-stream.push(Buffer.from([ 0x01, STX, 0x04, DLE, STX, 0x05, ACK ]));
-stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, ACK, 0x04, 0x05 ]));
-stream.push(Buffer.from([ STX2, 0x04, DLE, STX, 0x05, ACK ]));
-stream.push(Buffer.from([ DLE, DLE, 0x07, DLE, ETX, 0x08, ETX, ACK, 0x04, 0x05 ]));
+stream.push(Buffer.from([ 0x24, STX, 0x24, DLE, STX, 0x25, ACK ]));
+stream.push(Buffer.from([ DLE, DLE, 0x27, DLE, ETX, 0x28, ETX, ACK, 0x24, 0x25 ]));
+stream.push(Buffer.from([ STX2, 0x24, DLE, STX, 0x25, ACK ]));
+stream.push(Buffer.from([ DLE, DLE, 0x27, DLE, ETX, 0x28, ETX, ACK, 0x24, 0x25 ]));
 ```
 
 ### Want to extract specific tags ?
@@ -215,10 +197,10 @@ stream.pipe(new Splitter({
 }).on("whatever", () => {
 	console.log("whatever received"); // (only 1x)
 }).on("data", (chunk) => {
-	// Buffer([ 0x20, 0x21, 0x22, ACK, NAK, WAK, 0x23 ]) (x1)
+	// Buffer([ STX, 0x20, 0x21, 0x22, ACK, NAK, WAK, 0x23, ETX ]) (x1)
 });
 
-stream.push(Buffer.from([ 0x51, 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
+stream.push(Buffer.from([ 0x51, 0x24, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
 stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, WAK, DLE, WAK, 0x20, 0x21 ]));
 ```
 
@@ -242,37 +224,27 @@ function computeLRC (frame) {
 }
 
 const stream = createReadStream();
-const splitter = new Splitter({
-	"startWith": STX, "endWith": ETX
+
+stream.pipe(new Splitter({
+	"startWith": STX, "endWith": ETX,
 	"controlBits": "end+1"
-});
+})).on("data", (chunk) => {
 
-splitter.on("data", function (chunk) { // not an arrow function to change "this" scope to splitter
+	// Buffer([ STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07 ]) (x1)
 
-	// Buffer([ 0x20, 0x21, 0x22, 0x24 ]) (x1)
+	const data = chunk.slice(1, chunk.length - 2); // Buffer([ 0x20, 0x21, 0x22, 0x24 ])
+	const LRC = chunk[chunk.length - 1];
 
-	this.once("controls", (chunkControls) => {
-
-		// Buffer([ 0x07 ]) (x1)
-
-		if (computeLRC(data) === chunkControls) {
-			this.push(data);
-		}
-		else {
-			this.emit("error", new Error("not well-computed data :" + chunk.toString("hex") + "|" + chunkControls.toString("hex")));
-		}
-
-	});
+	if (_computeLRC(data) === LRC) {
+		console.log("OK");
+	}
+	else {
+		console.error(new Error("not well-computed data :" + data.toString("hex") + "|" + Buffer.from([ LRC ]).toString("hex")));
+	}
 
 });
 
-stream.pipe(splitter).on("data", (chunk) => {
-
-	// Buffer([ 0x20, 0x21, 0x22, 0x24 ]) (x1)
-
-});
-
-stream.push(Buffer.from([ 0x51, 0x01, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x01 ]));
+stream.push(Buffer.from([ 0x51, 0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24 ]));
 ```
 
 ## Tests
