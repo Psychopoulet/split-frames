@@ -212,7 +212,7 @@ stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, WAK, DLE, WAK, 0x20, 0x21 ])
 
 ```javascript
 
-function computeLRC (frame) {
+function _computeLRC (frame) {
 
 	let lrc = 0x00;
 
