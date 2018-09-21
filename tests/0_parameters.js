@@ -57,6 +57,16 @@ describe("parameters", () => {
 
 		});
 
+		it("should check with wrong start timeout tag", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"startTimeout": "test"
+				});
+			}, TypeError);
+
+		});
+
 		it("should check with wrong end tag", () => {
 
 			assert.throws(() => {
@@ -79,13 +89,13 @@ describe("parameters", () => {
 				new SplitFrames({
 					"escapeWith": "test"
 				});
-			}, Error);
+			}, TypeError);
 
 			assert.throws(() => {
 				new SplitFrames({
 					"escapeWith": [ "test" ]
 				});
-			}, Error);
+			}, TypeError);
 
 		});
 
@@ -95,7 +105,7 @@ describe("parameters", () => {
 				new SplitFrames({
 					"specifics": "test"
 				});
-			}, Error);
+			}, TypeError);
 
 			assert.throws(() => {
 				new SplitFrames({
@@ -199,7 +209,7 @@ describe("parameters", () => {
 				new SplitFrames({
 					"controlBits": false
 				});
-			}, Error);
+			}, TypeError);
 
 		});
 

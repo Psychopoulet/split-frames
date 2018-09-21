@@ -45,6 +45,30 @@ describe("start only", () => {
 
 	});
 
+	it("should split frame with no second start bit", () => {
+
+		return new Promise((resolve, reject) => {
+
+			const splitter = new SplitFrames({
+				"startWith": STX,
+				"startTimeout": 200
+			}).once("error", reject).once("data", (chunk) => {
+
+				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+				assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24 ]), "The chunk is not as expected");
+
+				resolve();
+
+			});
+
+			// tested frame
+			splitter.write(Buffer.from([ STX, 0x24 ]));
+
+		});
+
+	});
+
 	it("should split frame with one start", () => {
 
 		return new Promise((resolve, reject) => {
