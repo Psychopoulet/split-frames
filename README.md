@@ -32,15 +32,17 @@ type ControlBits = "none" | "end+1" | "end+2";
 type Tag: number | Buffer | Array<number | Buffer>
 ```
 
-  * "startWith": Tag
-  * "endWith": Tag
-  * "escapeWith": Tag
-  * "escaped": Array<Tag>
-  * "specifics": object
-  * "controlBits": ControlBits (default: "none")
+  * ```javascript "startWith": Tag ```
+  * ```javascript "startTimeout": integer ``` (default: 200)
+  * ```javascript "endWith": Tag ```
+  * ```javascript "escapeWith": Tag ```
+  * ```javascript "escaped": Array<Tag> ```
+  * ```javascript "specifics": object ```
+  * ```javascript "controlBits": ControlBits ``` (default: "none")
+
+> "startTimeout" is a timeout (in milliseconds) which end frame in "start only" mode, if no second "start" bit is encountered after the first one
 
 > "specifics" is a [ key: string => value: Tag ] object which fire a "key" event when a "value" tag is found out of the message and not escaped
-
 > ex : { "specifics": { "nak": 0x25 } } will fire an "nak" event when 0x25 bit is encountered
 
 ## Examples
