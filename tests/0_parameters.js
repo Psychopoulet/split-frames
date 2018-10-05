@@ -29,91 +29,221 @@ describe("parameters", () => {
 
 	});
 
-	it("should check with inexistant option", () => {
-
-		assert.throws(() => {
-			new SplitFrames({
-				"test": "test"
-			});
-		}, Error);
-
-	});
-
 	describe("basic validations", () => {
 
-		it("should check with wrong start tag", () => {
+		describe("start tag", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"startWith": "test"
-				});
-			}, TypeError);
+			it("should check with wrong parameter", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"startWith": [ "test" ]
+				assert.throws(() => {
+					new SplitFrames({
+						"startWith": "test"
+					});
+				}, TypeError);
+
+				assert.throws(() => {
+					new SplitFrames({
+						"startWith": [ "test" ]
+					});
+				}, TypeError);
+
+			});
+
+			it("should check with right parameter", () => {
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"startWith": 0x02
+					});
 				});
-			}, TypeError);
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"startWith": [ 0x02, 0x03 ]
+					});
+				});
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"startWith": [ Buffer.from([ 0x02 ]) ]
+					});
+				});
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"startWith": [ Buffer.from([ 0x02 ]), Buffer.from([ 0x03 ]) ]
+					});
+				});
+
+			});
 
 		});
 
-		it("should check with wrong start timeout tag", () => {
+		describe("start timeout tag", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"startTimeout": "test"
+			it("should check with wrong parameter", () => {
+
+				assert.throws(() => {
+					new SplitFrames({
+						"startTimeout": "test"
+					});
+				}, TypeError);
+
+			});
+
+			it("should check with right parameter", () => {
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"startTimeout": 200
+					});
 				});
-			}, TypeError);
+
+			});
 
 		});
 
-		it("should check with wrong end tag", () => {
+		describe("end tag", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"endWith": "test"
-				});
-			}, TypeError);
+			it("should check with wrong parameter", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"endWith": [ "test" ]
+				assert.throws(() => {
+					new SplitFrames({
+						"endWith": "test"
+					});
+				}, TypeError);
+
+				assert.throws(() => {
+					new SplitFrames({
+						"endWith": [ "test" ]
+					});
+				}, TypeError);
+
+			});
+
+			it("should check with right parameter", () => {
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"endWith": 0x02
+					});
 				});
-			}, TypeError);
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"endWith": [ 0x02, 0x03 ]
+					});
+				});
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"endWith": [ Buffer.from([ 0x02 ]) ]
+					});
+				});
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"endWith": [ Buffer.from([ 0x02 ]), Buffer.from([ 0x03 ]) ]
+					});
+				});
+
+			});
 
 		});
 
-		it("should check with wrong escapeWith tag", () => {
+		describe("escapeWith tag", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"escapeWith": "test"
-				});
-			}, TypeError);
+			it("should check with wrong parameter", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"escapeWith": [ "test" ]
+				assert.throws(() => {
+					new SplitFrames({
+						"escapeWith": "test"
+					});
+				}, TypeError);
+
+				assert.throws(() => {
+					new SplitFrames({
+						"escapeWith": [ "test" ]
+					});
+				}, TypeError);
+
+			});
+
+			it("should check with right parameter", () => {
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"escapeWith": 0x02
+					});
 				});
-			}, TypeError);
+
+			});
 
 		});
 
-		it("should check with wrong specifics tag", () => {
+		describe("specifics tag", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"specifics": "test"
-				});
-			}, TypeError);
+			it("should check with wrong parameter", () => {
 
-			assert.throws(() => {
-				new SplitFrames({
-					"specifics": {
-						"nak": "test"
-					}
+				assert.throws(() => {
+					new SplitFrames({
+						"specifics": "test"
+					});
+				}, TypeError);
+
+				assert.throws(() => {
+					new SplitFrames({
+						"specifics": {
+							"nak": "test"
+						}
+					});
+				}, Error);
+
+				assert.throws(() => {
+					new SplitFrames({
+						"specifics": {
+							"nak": [ "test" ]
+						}
+					});
+				}, Error);
+
+			});
+
+			it("should check with right parameter", () => {
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"specifics": {
+							"nak": 0x02
+						}
+					});
 				});
-			}, Error);
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"specifics": {
+							"nak": [ 0x02, 0x03 ]
+						}
+					});
+				});
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"specifics": {
+							"nak": [ Buffer.from([ 0x02 ]) ]
+						}
+					});
+				});
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"specifics": {
+							"nak": [ Buffer.from([ 0x02 ]), Buffer.from([ 0x03 ]) ]
+						}
+					});
+				});
+
+			});
 
 		});
 
