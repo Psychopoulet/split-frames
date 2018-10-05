@@ -36,7 +36,7 @@ type Tag: number | Buffer | Array< number | Buffer >
   * ```javascript "startTimeout": integer ``` (default: 200)
   * ```javascript "endWith": Tag ```
   * ```javascript "escapeWith": number ```
-  * ```javascript "escaped": Array<Tag> ```
+  * ```javascript "escaped": Array<number> ```
   * ```javascript "specifics": object ```
   * ```javascript "controlBits": ControlBits ``` (default: "none")
 

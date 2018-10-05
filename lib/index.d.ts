@@ -12,20 +12,25 @@ declare module "split-frames" {
 
 	class Splitter extends require("stream").Transform {
 
-		protected _controlBits: ControlBits;
-		protected _startWith: Tag;
-		protected _endWith: Tag;
-		protected _escapeWith: Tag;
-		protected _escaped: Array<Tag>;
-		protected _specifics: Array<Tag>;
 		protected _frame: Buffer;
 		protected _digesting: boolean;
-		protected _digester: () => void;
 
+		// from params
+		protected _startWith: Tag;
+		protected _startTimeout: number;
+		protected _endWith: Tag;
+		protected _escapeWith: number;
+		protected _escaped: Array<number>;
+		protected _specifics: object;
+		protected _controlBits: ControlBits;
+
+		// methods
+		protected _searchFirstTag(tag: Tag, beginWith?: number): SearchedBits;
 		protected _searchFirstStart(): SearchedBits;
 		protected _searchFirstEnd(): SearchedBits;
-		protected _searchTags(tag: Tag): number;
+		protected _searchTags(tag: Tag, beginWith?: number): number;
 		protected _digest(): void;
+		protected _digester(): void;
 		protected _transform(chunk: Buffer, enc?: string, cb?: () => void): void;
 
 	}
