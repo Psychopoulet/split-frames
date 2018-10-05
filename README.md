@@ -29,13 +29,13 @@ $ npm install split-frames
 
 ```typescript
 type ControlBits = "none" | "end+1" | "end+2";
-type Tag: number | Buffer | Array<number | Buffer>
+type Tag: number | Buffer | Array< number | Buffer >
 ```
 
   * ```javascript "startWith": Tag ```
   * ```javascript "startTimeout": integer ``` (default: 200)
   * ```javascript "endWith": Tag ```
-  * ```javascript "escapeWith": Tag ```
+  * ```javascript "escapeWith": number ```
   * ```javascript "escaped": Array<Tag> ```
   * ```javascript "specifics": object ```
   * ```javascript "controlBits": ControlBits ``` (default: "none")
