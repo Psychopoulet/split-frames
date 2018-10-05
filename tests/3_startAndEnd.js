@@ -59,7 +59,7 @@ describe("start & end", () => {
 			});
 
 			// tested frame
-			splitter.write(Buffer.from([ 0x24, STX, 0x24, 0x24, 0x25, 0x26 ]));
+			splitter.write(Buffer.from([ STX, 0x24, 0x24, 0x25, 0x26 ]));
 			// close tested frame
 			splitter.write(Buffer.from([ ETX ]));
 
@@ -164,6 +164,53 @@ describe("start & end", () => {
 				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
 				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
 				assert.deepStrictEqual(chunk, Buffer.from([ DLE, STX, 0x24, 0x25, 0x26, ETX ]), "The chunk is not as expected");
+
+				resolve();
+
+			// tested frame
+			}).write(Buffer.from([ 0x24, DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX ]));
+
+		});
+
+	});
+
+	it("should split frame with one bit start and two bits end", () => {
+
+		return new Promise((resolve, reject) => {
+
+			new SplitFrames({
+				"startWith": STX,
+				"endWith": Buffer.from([ DLE, ETX ])
+			}).once("error", reject).once("data", (chunk) => {
+
+				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+				assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, 0x26, DLE, ETX ]), "The chunk is not as expected");
+
+				resolve();
+
+			// tested frame
+			}).write(Buffer.from([ 0x24, STX, 0x24, 0x25, 0x26, DLE, ETX, 0x27, 0x28, 0x29, DLE, ETX ]));
+
+		});
+
+	});
+
+	it("should split frame with two bits start and two bits end", () => {
+
+		return new Promise((resolve, reject) => {
+
+			new SplitFrames({
+				"startWith": Buffer.from([ DLE, STX ]),
+				"endWith": Buffer.from([ DLE, ETX ])
+			}).once("error", reject).once("data", (chunk) => {
+
+				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+				assert.deepStrictEqual(chunk,
+					Buffer.from([ DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX ]),
+					"The chunk is not as expected"
+				);
 
 				resolve();
 

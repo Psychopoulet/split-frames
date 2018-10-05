@@ -180,6 +180,41 @@ describe("parameters", () => {
 			});
 
 		});
+		describe("escaped tag", () => {
+
+			it("should check with wrong parameter", () => {
+
+				assert.throws(() => {
+					new SplitFrames({
+						"escaped": "test"
+					});
+				}, TypeError);
+
+				assert.throws(() => {
+					new SplitFrames({
+						"escaped": [ "test" ]
+					});
+				}, TypeError);
+
+			});
+
+			it("should check with right parameter", () => {
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"escaped": 0x02
+					});
+				});
+
+				assert.doesNotThrow(() => {
+					new SplitFrames({
+						"escaped": [ 0x02 ]
+					});
+				});
+
+			});
+
+		});
 
 		describe("specifics tag", () => {
 
