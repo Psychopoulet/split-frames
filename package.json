@@ -1,6 +1,6 @@
 {
   "name": "split-frames",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Split Buffer frames from streams",
   "main": "lib/main.js",
   "typings": "lib/index.d.ts",
@@ -50,7 +50,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "10.11.4",
+    "@types/node": "10.9.4",
     "gulp": "4.0.0",
     "gulp-coveralls": "0.1.4",
     "gulp-eslint": "5.0.0",
