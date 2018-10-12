@@ -180,6 +180,7 @@ describe("parameters", () => {
 			});
 
 		});
+
 		describe("escaped tag", () => {
 
 			it("should check with wrong parameter", () => {
@@ -301,7 +302,7 @@ describe("parameters", () => {
 
 		it("should check ack tag with end only", () => {
 
-			assert.throws(() => {
+			assert.doesNotThrow(() => {
 				new SplitFrames({
 					"specifics": {
 						"ack": ACK
@@ -327,7 +328,7 @@ describe("parameters", () => {
 
 		it("should check nak tag with end only", () => {
 
-			assert.throws(() => {
+			assert.doesNotThrow(() => {
 				new SplitFrames({
 					"specifics": {
 						"nak": NAK
@@ -353,7 +354,7 @@ describe("parameters", () => {
 
 		it("should check wak tag with end only", () => {
 
-			assert.throws(() => {
+			assert.doesNotThrow(() => {
 				new SplitFrames({
 					"specifics": {
 						"wak": WAK

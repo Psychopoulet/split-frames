@@ -5,6 +5,8 @@ Split Buffer frames from streams
 [![Coverage Status](https://coveralls.io/repos/github/Psychopoulet/split-frames/badge.svg?branch=master)](https://coveralls.io/github/Psychopoulet/split-frames)
 [![Dependency Status](https://david-dm.org/Psychopoulet/split-frames/status.svg)](https://david-dm.org/Psychopoulet/split-frames)
 [![Dev dependency Status](https://david-dm.org/Psychopoulet/split-frames/dev-status.svg)](https://david-dm.org/Psychopoulet/split-frames?type=dev)
+[![Issues](https://img.shields.io/github/issues/Psychopoulet/split-frames.svg)](https://github.com/Psychopoulet/split-frames/issues)
+[![Pull requests](https://img.shields.io/github/issues-pr/Psychopoulet/split-frames.svg)](https://github.com/Psychopoulet/split-frames/pulls)
 
 ## Installation
 
@@ -180,7 +182,7 @@ stream.push(Buffer.from([ DLE, DLE, 0x27, DLE, ETX, 0x28, ETX, ACK, 0x24, 0x25 ]
 ### Want to extract specific tags ?
 
 > positive acknowledgement, negative acknowledgement, waiting for acknowledgement, whatever...
-> only with no tags || start AND end tags
+> only with no tags || start AND end tags || end tags (for firsts bits)
 
 ```javascript
 const stream = createReadStream();
