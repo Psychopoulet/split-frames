@@ -15,6 +15,7 @@
 	const ETX = 0x03;
 	const DLE = 0x10;
 	const ACK = 0x06;
+	const NAK = 0x15;
 
 // module
 
@@ -149,6 +150,63 @@ describe("specifics", () => {
 	});
 
 	describe("with tags", () => {
+
+		it("should test \"ack\" with start tags", () => {
+
+			assert.throws(() => {
+				new SplitFrames({
+					"specifics": {
+						"ack": ACK
+					},
+					"startWith": STX
+				});
+			}, Error);
+
+		});
+
+		it("should test \"ack\" with end tags", () => {
+
+			return new Promise((resolve, reject) => {
+
+				let countData = 0;
+				let countAck = 0;
+
+				new SplitFrames({
+					"specifics": {
+						"ack": ACK,
+						"nak": NAK
+					},
+					"endWith": ETX,
+					"escapeWith": DLE,
+					"escaped": [ DLE, ACK, NAK ]
+				}).once("error", reject).on("data", (chunk) => {
+
+					++countData;
+
+					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+
+					if (1 === countData) {
+						assert.deepStrictEqual(chunk, Buffer.from([ DLE, ACK, 0x21, 0x21, 0x21, 0x21, ETX ]), "The chunk is not as expected");
+					}
+					else if (2 === countData) {
+						assert.deepStrictEqual(chunk, Buffer.from([ 0x24, 0x25, 0x27, ETX ]), "The chunk is not as expected");
+						assert.strictEqual(countData, 5, "The amount of \"ack\" received is not as expected");
+					}
+
+				}).on("ack", () => {
+
+					++countAck;
+
+					if (5 === countAck) {
+						resolve();
+					}
+
+				}).write(Buffer.from([ ACK, NAK, ACK, ACK, DLE, ACK, 0x21, 0x21, 0x21, 0x21, ETX, ACK, NAK, ACK, 0x24, 0x25, 0x27, ETX ]));
+
+			});
+
+		});
 
 		it("should test \"ack\" with start and end tags", () => {
 
