@@ -1,18 +1,20 @@
 {
   "name": "split-frames",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "Split Buffer frames from streams",
   "main": "lib/main.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "ci": "gulp coveralls",
-    "precommit": "gulp eslint",
-    "prepush": "gulp mocha"
+    "lint": "npx eslint ./lib/**/*.js ./test/**/*.js",
+    "check-updates": "npx check-version-modules",
+    "unit-tests": "npx nyc --reporter=html --reporter=text mocha",
+    "tests": "npm run-script lint && npm run-script check-updates && npm run-script unit-tests",
+    "ci": "npm run-script tests && npx nyc report --reporter=text-lcov | coveralls"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "gulp eslint",
-      "pre-push": "gulp mocha"
+      "pre-commit": "npm run-script lint",
+      "pre-push": "npm run-script tests"
     }
   },
   "repository": {
@@ -50,14 +52,13 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "10.9.4",
-    "gulp": "4.0.0",
-    "gulp-coveralls": "0.1.4",
-    "gulp-eslint": "5.0.0",
-    "gulp-istanbul": "1.1.3",
-    "gulp-mocha": "3.0.1",
-    "gulp-plumber": "1.2.0",
-    "husky": "1.1.1"
+    "@types/node": "10.12.18",
+    "check-version-modules": "1.1.1",
+    "coveralls": "3.0.2",
+    "eslint": "5.12.1",
+    "mocha": "5.2.0",
+    "nyc": "13.1.0",
+    "husky": "1.3.1"
   },
   "homepage": "https://github.com/Psychopoulet/split-frames#readme",
   "engines": {

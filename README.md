@@ -255,7 +255,7 @@ stream.push(Buffer.from([ 0x51, 0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x
 ## Tests
 
 ```bash
-$ gulp tests
+$ npm run-script tests
 ```
 
 ## License

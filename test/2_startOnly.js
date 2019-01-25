@@ -268,12 +268,7 @@ describe("start only", () => {
 				}
 
 			// tested frame
-			}).write(Buffer.from([
-				0x24,
-				STX, 0x24, 0x25, 0x26,
-				STX2, 0x24, 0x25,
-				STX
-			]));
+			}).write(Buffer.from([ 0x24, STX, 0x24, 0x25, 0x26, STX2, 0x24, 0x25, STX ]));
 
 		});
 
@@ -318,8 +313,28 @@ describe("start only", () => {
 			// tested frame
 			}).write(Buffer.from([
 				0x24,
-				STX, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x24, 0x25, 0x26,
-				STX2, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x24, 0x25, 0x26,
+				STX,
+				0x24,
+				DLE,
+				STX,
+				0x25,
+				0x26,
+				DLE,
+				DLE,
+				0x24,
+				0x25,
+				0x26,
+				STX2,
+				0x24,
+				DLE,
+				STX,
+				0x25,
+				0x26,
+				DLE,
+				DLE,
+				0x24,
+				0x25,
+				0x26,
 				STX
 			]));
 
