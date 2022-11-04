@@ -10,6 +10,16 @@ declare module "split-frames" {
 		"end": number;
 	}
 
+	interface iOptions {
+		"startWith"?: Tag;
+		"startTimeout"?: number;
+		"endWith"?: Tag;
+		"escapeWith"?: Tag;
+		"escaped"?: Array<number>;
+		"specifics"?: { [key:string]: Tag };
+		"controlBits"?: ControlBits;
+	}
+
 	class Splitter extends require("stream").Transform {
 
 		protected _frame: Buffer;
@@ -23,6 +33,10 @@ declare module "split-frames" {
 		protected _escaped: Array<number>;
 		protected _specifics: object;
 		protected _controlBits: ControlBits;
+
+		// constructor
+
+		constructor (params?: iOptions);
 
 		// methods
 		protected _searchFirstTag(tag: Tag, beginWith?: number): SearchedBits;
