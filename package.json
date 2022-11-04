@@ -62,6 +62,6 @@
   },
   "homepage": "https://github.com/Psychopoulet/split-frames#readme",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=16.0.0"
   }
 }
