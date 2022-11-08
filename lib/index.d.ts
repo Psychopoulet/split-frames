@@ -2,6 +2,8 @@
 
 declare module "split-frames" {
 
+	import { Transform } from "stream";
+
 	type ControlBits = "none" | "end+1" | "end+2";
 	type Tag = number | Buffer | Array<number>;
 
@@ -20,7 +22,7 @@ declare module "split-frames" {
 		"controlBits"?: ControlBits;
 	}
 
-	class Splitter extends require("stream").Transform {
+	class Splitter extends Transform {
 
 		protected _frame: Buffer;
 		protected _digesting: boolean;
@@ -45,7 +47,6 @@ declare module "split-frames" {
 		protected _searchTags(tag: Tag, beginWith?: number): number;
 		protected _digest(): void;
 		protected _digester(): void;
-		protected _transform(chunk: Buffer, enc?: string, cb?: () => void): void;
 
 	}
 
