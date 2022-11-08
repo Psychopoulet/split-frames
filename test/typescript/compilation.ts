@@ -33,6 +33,6 @@ stream.pipe(new Splitter({
 	console.log(chunk);
     // Buffer([ STX, 0x20, 0x21, 0x22, ACK, NAK, WAK, 0x23, ETX, 0x01 ]) (x1)
 });
- 
+
 stream.push(Buffer.from([ 0x51, 0x01, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
 stream.push(Buffer.from([ 0x23, ETX, 0x01, NAK, DLE, NAK, WAK, DLE, WAK, 0x20, 0x21 ]));
