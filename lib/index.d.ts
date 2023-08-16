@@ -2,7 +2,7 @@
 
 declare module "split-frames" {
 
-	import { Transform } from "stream";
+	import { Transform } from "node:stream";
 
 	type ControlBits = "none" | "end+1" | "end+2";
 	type Tag = number | Buffer | Array<number>;
