@@ -9,7 +9,7 @@
 	// natives
 	const assert = require("node:assert");
 	const { Readable } = require("node:stream");
-	const join = require("node:path");
+	const { join } = require("node:path");
 
 	// locals
 	const Splitter = require(join(__dirname, "..", "lib", "main.js"));

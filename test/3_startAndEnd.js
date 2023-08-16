@@ -4,7 +4,7 @@
 
 	// natives
 	const assert = require("node:assert");
-	const join = require("node:path");
+	const { join } = require("node:path");
 
 	// locals
 	const SplitFrames = require(join(__dirname, "..", "lib", "main.js"));
