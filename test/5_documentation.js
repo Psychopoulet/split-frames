@@ -6,10 +6,13 @@
 
 // deps
 
-	const assert = require("assert");
-	const { Readable } = require("stream");
+	// natives
+	const assert = require("node:assert");
+	const { Readable } = require("node:stream");
+	const join = require("node:path");
 
-	const Splitter = require(require("path").join(__dirname, "..", "lib", "main.js"));
+	// locals
+	const Splitter = require(join(__dirname, "..", "lib", "main.js"));
 
 // consts
 
