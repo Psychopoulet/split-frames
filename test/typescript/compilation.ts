@@ -1,7 +1,7 @@
 /// <reference path="../../lib/index.d.ts" />
 
 import Splitter = require("../../lib/main.js");
-import { Readable } from "stream";
+import { Readable } from "node:stream";
 
 const STX = 0x02, ETX = 0x03, DLE = 0x10, ACK = 0x06, NAK = 0x15, WAK = 0x13;
 

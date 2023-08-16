@@ -3,9 +3,10 @@
 
 // deps
 
-	const { exec } = require("child_process");
-	const { join } = require("path");
-	const { unlink } = require("fs");
+	// natives
+	const { exec } = require("node:child_process");
+	const { join } = require("node:path");
+	const { unlink } = require("node:fs/promises");
 
 // consts
 
@@ -15,12 +16,8 @@
 
 describe("compilation typescript", () => {
 
-	after((done) => {
-
-		unlink(join(__dirname, "typescript", "compilation.js"), (err) => {
-			return err ? done(err) : done();
-		});
-
+	after(() => {
+		return unlink(join(__dirname, "typescript", "compilation.js"));
 	});
 
 	it("should compile typescript file", (done) => {

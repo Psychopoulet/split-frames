@@ -6,8 +6,12 @@
 
 // deps
 
-	const assert = require("assert");
-	const SplitFrames = require(require("path").join(__dirname, "..", "lib", "main.js"));
+	// natives
+	const assert = require("node:assert");
+	const { join } = require("node:path");
+
+	// locals
+	const SplitFrames = require(join(__dirname, "..", "lib", "main.js"));
 
 // consts
 
