@@ -100,8 +100,8 @@ export default function initData (options?: iOptions): iConf {
 
 							}
 							else if (
-								null !== specifics[key] &&
-								null !== result.startWith && null === result.endWith
+								undefined !== specifics[key] &&
+								undefined !== result.startWith && undefined === result.endWith
 							) {
 
 								throw new Error(
