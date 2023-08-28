@@ -10,10 +10,10 @@
 
 	import initData from "./checkers/initData";
 
-	let _digestNoStartNoEnd: (() => void) | null = null;
-	let _digestStartOnly: (() => void) | null = null;
-	let _digestEndOnly: (() => void) | null = null;
-	let _digestStartAndEnd: (() => void) | null = null;
+	let _digestNoStartNoEnd: (() => void) | undefined = undefined;
+	let _digestStartOnly: (() => void) | undefined = undefined;
+	let _digestEndOnly: (() => void) | undefined = undefined;
+	let _digestStartAndEnd: (() => void) | undefined = undefined;
 
 // types & interfaces
 
@@ -51,9 +51,9 @@
 
 		function _chooseDigester (startWith: tTag | undefined, endWith: tTag | undefined): (enc: BufferEncoding) => void {
 
-			let digester: (() => void) | null = null;
+			let digester: (() => void) | undefined = undefined;
 
-				if (null === startWith && null === endWith) {
+				if (undefined === startWith && undefined === endWith) {
 
 					if (!_digestNoStartNoEnd) {
 						_digestNoStartNoEnd = require(join(__dirname, "digesters", "digestNoStartNoEnd.js"));
@@ -62,7 +62,7 @@
 					digester = _digestNoStartNoEnd;
 
 				}
-				else if (null !== startWith && null === endWith) {
+				else if (undefined !== startWith && undefined === endWith) {
 
 					if (!_digestStartOnly) {
 						_digestStartOnly = require(join(__dirname, "digesters", "digestStartOnly.js"));
@@ -71,7 +71,7 @@
 					digester = _digestStartOnly;
 
 				}
-				else if (null === startWith && null !== endWith) {
+				else if (undefined === startWith && undefined !== endWith) {
 
 					if (!_digestEndOnly) {
 						_digestEndOnly = require(join(__dirname, "digesters", "digestEndOnly.js"));
@@ -185,7 +185,7 @@ export default class SplitFrames extends Transform {
 
 			}
 
-			protected _searchFirstTag (tag: tTag | undefined, beginAt: number = 0): iSearchedBits | null {
+			protected _searchFirstTag (tag: tTag | undefined, beginAt: number = 0): iSearchedBits | undefined {
 
 				let startAt: number = -1;
 				let endAt: number = -1;
@@ -212,7 +212,7 @@ export default class SplitFrames extends Transform {
 
 				// not found
 				if (-1 >= startAt || -1 >= endAt) {
-					return null;
+					return undefined;
 				}
 
 				// escaped
@@ -304,13 +304,13 @@ export default class SplitFrames extends Transform {
 
 				}
 
-			protected _searchFirstStart (): iSearchedBits | null {
+			protected _searchFirstStart (): iSearchedBits | undefined {
 				return this._searchFirstTag(this._startWith);
 			}
 
-			protected _searchFirstEnd (): iSearchedBits | null {
+			protected _searchFirstEnd (): iSearchedBits | undefined {
 
-				const firstTag: iSearchedBits | null = this._searchFirstTag(this._endWith);
+				const firstTag: iSearchedBits | undefined = this._searchFirstTag(this._endWith);
 
 					if (firstTag) {
 
@@ -323,7 +323,7 @@ export default class SplitFrames extends Transform {
 
 						// end tag detected but without valid control bits length
 						if (firstTag.end > this._frame.length) {
-							return null;
+							return undefined;
 						}
 
 					}
