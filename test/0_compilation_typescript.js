@@ -7,6 +7,7 @@
 	const { exec } = require("node:child_process");
 	const { join } = require("node:path");
 	const { unlink } = require("node:fs/promises");
+	const { lstat } = require("node:fs");
 
 // consts
 
@@ -16,8 +17,34 @@
 
 describe("compilation typescript", () => {
 
+	const compilationTarget = join(__dirname, "typescript", "compilation.js");
+
+	before(() => {
+
+		return new Promise((resolve) => {
+
+			lstat(compilationTarget, (err, stats) => {
+				return resolve(Boolean(!err && stats.isFile()));
+			});
+
+		}).then((exists) => {
+			return exists ? unlink(compilationTarget) : Promise.resolve();
+		});
+
+	});
+
 	after(() => {
-		return unlink(join(__dirname, "typescript", "compilation.js"));
+
+		return new Promise((resolve, reject) => {
+
+			lstat(compilationTarget, (err, stats) => {
+				return resolve(Boolean(!err && stats.isFile()));
+			});
+
+		}).then((exists) => {
+			return exists ? unlink(compilationTarget) : Promise.resolve();
+		});
+
 	});
 
 	it("should compile typescript file", (done) => {

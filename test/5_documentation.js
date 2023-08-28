@@ -12,7 +12,7 @@
 	const { join } = require("node:path");
 
 	// locals
-	const Splitter = require(join(__dirname, "..", "lib", "main.js"));
+	const SplitFrames = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
 
 // consts
 
@@ -70,7 +70,7 @@ describe("documentation", () => {
 
 			const stream = createReadStream();
 
-			stream.pipe(new Splitter({
+			stream.pipe(new SplitFrames({
 				"startWith": STX
 			})).once("error", reject).on("data", (chunk) => {
 
@@ -104,7 +104,7 @@ describe("documentation", () => {
 
 			const stream = createReadStream();
 
-			stream.pipe(new Splitter({
+			stream.pipe(new SplitFrames({
 				"endWith": ETX
 			})).once("error", reject).on("data", (chunk) => {
 
@@ -138,7 +138,7 @@ describe("documentation", () => {
 
 			const stream = createReadStream();
 
-			stream.pipe(new Splitter({
+			stream.pipe(new SplitFrames({
 				"startWith": STX,
 				"endWith": ETX
 			})).once("error", reject).on("data", (chunk) => {
@@ -171,7 +171,7 @@ describe("documentation", () => {
 
 			const stream = createReadStream();
 
-			stream.pipe(new Splitter({
+			stream.pipe(new SplitFrames({
 				"startWith": STX,
 				"endWith": Buffer.from([ DLE, ETX ])
 			})).on("data", (chunk) => {
@@ -196,7 +196,7 @@ describe("documentation", () => {
 
 			const stream = createReadStream();
 
-			stream.pipe(new Splitter({
+			stream.pipe(new SplitFrames({
 				"startWith": STX,
 				"endWith": ETX,
 				"escapeWith": DLE,
@@ -231,7 +231,7 @@ describe("documentation", () => {
 			const STX2 = 0x82;
 			const stream = createReadStream();
 
-			stream.pipe(new Splitter({
+			stream.pipe(new SplitFrames({
 				"startWith": [ STX, STX2 ],
 				"endWith": ETX,
 				"escapeWith": DLE,
@@ -283,7 +283,7 @@ describe("documentation", () => {
 
 			const stream = createReadStream();
 
-			stream.pipe(new Splitter({
+			stream.pipe(new SplitFrames({
 				"startWith": STX,
 				"endWith": ETX,
 				"specifics": {
@@ -329,7 +329,7 @@ describe("documentation", () => {
 
 			const stream = createReadStream();
 
-			stream.pipe(new Splitter({
+			stream.pipe(new SplitFrames({
 				"startWith": STX,
 				"endWith": ETX,
 				"controlBits": "end+1"
