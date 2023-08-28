@@ -1,33 +1,31 @@
-/*
-	eslint complexity: [ "error", { "max": 30 } ]
-*/
-
 "use strict";
 
 // deps
 
-	// natives
-	const { join } = require("node:path");
+	// locals
+	import checkTagsValidity from "./checkTagsValidity";
+
+// types & interfaces
 
 	// locals
-	const checkTagsValidity = require(join(__dirname, "checkTagsValidity.js"));
+	import { iOptions, iConf, tControlBits, tTagObject } from "../SplitFrames.js";
 
 // consts
 
-	const ALLOWED_CONTROL_BITS_OPTIONS = [ "none", "end+1", "end+2" ];
+	const ALLOWED_CONTROL_BITS_OPTIONS: Array<tControlBits> = [ "none", "end+1", "end+2" ];
 
 // module
 
-module.exports = (options) => {
+export default function initData (options?: iOptions): iConf {
 
-	const result = {
-		"startWith": null,
-		"startTimeout": null,
-		"endWith": null,
-		"escapeWith": null,
+	const result: iConf = {
+		"startWith": undefined,
+		"startTimeout": 200,
+		"endWith": undefined,
+		"escapeWith": undefined,
 		"escaped": [],
 		"specifics": {},
-		"controlBits": ""
+		"controlBits": "none"
 	};
 
 		if ("undefined" !== typeof options) {
@@ -64,12 +62,18 @@ module.exports = (options) => {
 
 			else {
 
-				result.startWith = "undefined" !== typeof options.startWith ? options.startWith : null;
-				result.startTimeout = "undefined" !== typeof options.startTimeout ? options.startTimeout : 200;
-				result.endWith = "undefined" !== typeof options.endWith ? options.endWith : null;
+				result.startWith = "undefined" !== typeof options.startWith ? options.startWith : undefined;
+				result.endWith = "undefined" !== typeof options.endWith ? options.endWith : undefined;
 
-				result.escapeWith = "undefined" !== typeof options.escapeWith ? options.escapeWith : null;
-				result.escaped = "undefined" !== typeof options.escaped ? options.escaped : [];
+				if ("undefined" !== typeof options.startTimeout) {
+					result.startTimeout = options.startTimeout;
+				}
+
+				result.escapeWith = "undefined" !== typeof options.escapeWith ? options.escapeWith : undefined;
+
+				if ("undefined" !== typeof options.escaped) {
+					result.escaped = options.escaped;
+				}
 
 				for (let i = 0; i < result.escaped.length; ++i) {
 
@@ -81,25 +85,27 @@ module.exports = (options) => {
 
 				if ("object" === typeof options.specifics) {
 
-					Object.keys(options.specifics).forEach((key) => {
+					const specifics: tTagObject = options.specifics;
 
-						if ("undefined" !== typeof options.specifics[key]) {
+					Object.keys(specifics).forEach((key: string): void => {
 
-							if (!checkTagsValidity(options.specifics[key])) {
+						if ("undefined" !== typeof specifics[key]) {
+
+							if (!checkTagsValidity(specifics[key])) {
 
 								throw new Error(
-									"\"" + options.specifics[key] + "\" specifics option" +
+									"\"" + specifics[key] + "\" specifics option" +
 									" sended is not a number, or an Array of numbers"
 								);
 
 							}
 							else if (
-								null !== options.specifics[key] &&
-								null !== result.startWith && null === result.endWith
+								undefined !== specifics[key] &&
+								undefined !== result.startWith && undefined === result.endWith
 							) {
 
 								throw new Error(
-									"If you want to use \"" + options.specifics[key] + "\" specific option," +
+									"If you want to use \"" + specifics[key] + "\" specific option," +
 									" you have to use \"endWith\" option"
 								);
 
