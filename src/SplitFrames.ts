@@ -49,7 +49,7 @@
 
 	// methods
 
-		function _chooseDigester (startWith: tTag | undefined, endWith: tTag | undefined): () => void {
+		function _chooseDigester (startWith: tTag | undefined, endWith: tTag | undefined): (enc: BufferEncoding) => void {
 
 			let digester: (() => void) | null = null;
 
@@ -115,7 +115,7 @@ export default class SplitFrames extends Transform {
 			protected _controlBits: iConf["controlBits"];
 
 			// dynamic digester
-			protected _digester: () => void;
+			protected _digester: (enc: BufferEncoding) => void;
 
 	// constructor
 
@@ -154,18 +154,18 @@ export default class SplitFrames extends Transform {
 					this._frame = Buffer.concat([ this._frame, chunk ]);
 
 					if (!this._digesting) {
-						this._digest();
+						this._digest(enc);
 					}
 
 				}
 
-				cb();
+				return cb();
 
 			}
 
 		// protected
 
-			protected _digest (): void {
+			protected _digest (enc: BufferEncoding): void {
 
 				if (!this._frame.length) {
 					this._digesting = false;
@@ -175,7 +175,7 @@ export default class SplitFrames extends Transform {
 					this._digesting = true;
 
 					try {
-						this._digester();
+						this._digester(enc);
 					}
 					catch (e) {
 						this.emit("error", e);
@@ -409,7 +409,7 @@ export default class SplitFrames extends Transform {
 
 								// escaper not escaped
 								if (!this._escaped.includes(this._escapeWith) || 1 >= foundAt || this._frame[foundAt - 2] !== this._escapeWith) {
-									foundAt = this._searchTags(tags, foundAt + 1);
+									foundAt = this._searchTags(tags as tTag, foundAt + 1);
 								}
 
 							}
