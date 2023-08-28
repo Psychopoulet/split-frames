@@ -1,7 +1,9 @@
 module.exports = {
     "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": 2018
+        "ecmaVersion": 2018,
+        "sourceType": "module",
+        "allowImportExportEverywhere": true
     },
     "env": {
         "es6": true,
@@ -73,7 +75,7 @@ module.exports = {
         "accessor-pairs": "error",
         "array-callback-return": "error",
         "block-scoped-var": "error",
-        "class-methods-use-this": "error",
+        "class-methods-use-this": 0,
         "complexity": "error",
         "consistent-return": "error",
         "curly": "error",
@@ -142,7 +144,7 @@ module.exports = {
         "yoda": [ "error", "always" ],
 
 
-        "strict": [ "error", "global" ],
+        "strict": 0,
 
 
         "init-declarations": "error",
@@ -196,7 +198,7 @@ module.exports = {
         "jsx-quotes": [ "error", "prefer-double" ],
         "key-spacing": [ "error", { "beforeColon": false, "afterColon": true } ],
         "keyword-spacing": [ "error", { "after": true, "before": true } ],
-        "line-comment-position": [ "error", { "position": "above" } ],
+        "line-comment-position": 0,
         "linebreak-style": 0,
         "lines-around-comment": "error",
         "max-depth": [ "error", 4 ],
@@ -211,9 +213,9 @@ module.exports = {
         "new-parens": "error",
         "newline-per-chained-call": 0,
         "no-array-constructor": "error",
-        "no-bitwise": "error",
+        "no-bitwise": [ "error", { "allow": [ "^" ] } ],
         "no-continue": "error",
-        "no-inline-comments": "error",
+        "no-inline-comments": 0,
         "no-lonely-if": "error",
         "no-mixed-operators": "error",
         "no-mixed-spaces-and-tabs": "error",
@@ -277,7 +279,7 @@ module.exports = {
         "no-useless-constructor": "error",
         "no-useless-rename": "error",
         "no-var": "error",
-        "object-shorthand": "error",
+        "object-shorthand": 0,
         "prefer-arrow-callback": "error",
         "prefer-const": "error",
         "prefer-destructuring": "error",
