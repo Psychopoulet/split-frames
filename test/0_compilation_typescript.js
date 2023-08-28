@@ -35,7 +35,7 @@ describe("compilation typescript", () => {
 
 	after(() => {
 
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 
 			lstat(compilationTarget, (err, stats) => {
 				return resolve(Boolean(!err && stats.isFile()));
