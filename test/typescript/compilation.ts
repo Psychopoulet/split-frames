@@ -1,4 +1,4 @@
-/// <reference path="../../lib/index.d.ts" />
+/// <reference path="../../lib/cjs/main.d.cts" />
 
 import SplitFrames = require("../../lib/cjs/main.cjs");
 import { Readable } from "node:stream";
