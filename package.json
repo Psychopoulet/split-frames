@@ -41,7 +41,7 @@
   "dependencies": {},
   "devDependencies": {
     "@types/node": "20.5.7",
-    "check-version-modules": "1.5.0",
+    "check-version-modules": "1.5.2",
     "coveralls": "3.1.1",
     "eslint": "8.48.0",
     "husky": "8.0.3",
