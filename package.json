@@ -59,11 +59,12 @@
 
   "husky": {
     "hooks": {
-        "pre-commit": "npm run-script lint",
-        "pre-push": "npm run-script unit-tests",
-        "pre-receive": "npm run-script tests"
+      "pre-commit": "npm run-script lint",
+      "pre-push": "npm run-script unit-tests",
+      "pre-receive": "npm run-script tests"
     }
   },
+
   "keywords": [
     "frame",
     "Buffer",
