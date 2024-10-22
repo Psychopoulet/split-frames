@@ -21,11 +21,11 @@
 
     "prepare": "npx husky init",
 
-    "clean": "npx rimraf lib",
+    "clean": "npx rimraf lib/cjs",
     "build": "npm run-script clean && npx tsc --project \"./tsconfig.json\"",
 
-    "lint": "npx eslint --config .eslintrc-src.js --ext .cts,.ts ./src/**/* && npx eslint --config .eslintrc-tests.js ./bin/*.js ./test/**/*.js",
-    "check-requires": "npx used-deps-analyzer \"./package.json\" \"./src\" --no-dev --overkill \"fs-extra\" \"node-promfs\"",
+    "lint": "npx eslint --config .eslintrc-src.js --ext .cts,.ts ./lib/src/**/* && npx eslint --config .eslintrc-tests.js ./bin/*.js ./test/**/*.js",
+    "check-requires": "npx used-deps-analyzer \"./package.json\" \"./lib/src\" --no-dev --overkill \"fs-extra\" \"node-promfs\"",
     "check-updates": "npx check-version-modules",
     "unit-tests": "npm run-script build && npx nyc --reporter=html --reporter=text mocha",
 
@@ -35,7 +35,7 @@
 
   "files": [
     "/bin",
-    "/lib",
+    "/lib/cjs",
     "/public"
   ],
   "engines": {
