@@ -1,7 +1,3 @@
-/*
-	eslint no-implicit-globals: 0, no-bitwise: 0
-*/
-
 "use strict";
 
 // deps
