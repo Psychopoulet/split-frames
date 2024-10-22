@@ -89,7 +89,15 @@
     "MSB",
     "LSB"
   ],
+
   "author": "Sébastien VIDAL",
+  "contributors": [
+    {
+      "name": "07ke",
+      "url": "https://github.com/07ke"
+    }
+  ],
+
   "license": "ISC",
 
   "homepage": "https://github.com/Psychopoulet/split-frames#readme",
