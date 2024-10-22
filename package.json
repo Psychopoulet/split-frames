@@ -19,20 +19,24 @@
 
   "scripts": {
 
-    "build": "node ./removeOldBuild.js && npx tsc --project \"./tsconfig.json\"",
+    "prepare": "npx husky init",
 
-    "lint": "npx eslint ./test/**/*.js",
-    "check-requires": "npx used-deps-analyzer \"./package.json\" \"./src\" --no-dev --overkill \"fs-extra\" \"node-promfs\"",
+    "clean": "npx rimraf lib/cjs",
+    "build": "npm run-script clean && npx tsc --project \"./tsconfig.json\"",
+
+    "lint": "npx eslint --config .eslintrc-src.js --ext .cts,.ts ./lib/src/**/* && npx eslint --config .eslintrc-tests.js ./bin/*.js ./test/**/*.js",
+    "check-requires": "npx used-deps-analyzer \"./package.json\" \"./lib/src\" --no-dev --overkill \"fs-extra\" \"node-promfs\"",
     "check-updates": "npx check-version-modules",
-    "unit-tests": "npm run build && npx nyc --reporter=html --reporter=text mocha",
+    "unit-tests": "npm run-script build && npx nyc --reporter=html --reporter=text mocha",
 
-    "tests": "npm run-script lint && npm run check-requires && npm run-script check-updates && npm run-script unit-tests",
-    "ci": "npm run-script tests && npx nyc report --reporter=text-lcov | coveralls"
+    "tests": "npm run-script lint && npm run-script check-requires && npm run-script check-updates && npm run-script unit-tests"
 
   },
 
   "files": [
-    "/lib"
+    "/bin",
+    "/lib/cjs",
+    "/public"
   ],
   "engines": {
     "node": ">=16.0.0"
@@ -40,23 +44,27 @@
 
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "20.5.7",
-    "check-version-modules": "1.5.0",
-    "coveralls": "3.1.1",
-    "eslint": "8.48.0",
-    "husky": "8.0.3",
-    "mocha": "10.2.0",
-    "nyc": "15.1.0",
-    "used-deps-analyzer": "0.1.6"
+    "@types/node": "22.7.8",
+    "check-version-modules": "2.1.2",
+    "colors": "1.4.0",
+    "eslint-plugin-personnallinter": "git+ssh://git@github.com/Psychopoulet/eslint-plugin-personnallinter",
+    "husky": "9.1.6",
+    "mocha": "10.7.3",
+    "nyc": "17.1.0",
+    "rimraf": "6.0.1",
+    "typescript": "5.6.3",
+    "used-deps-analyzer": "0.1.8"
   },
   "optionalDependencies": {},
 
   "husky": {
     "hooks": {
       "pre-commit": "npm run-script lint",
-      "pre-push": "npm run-script tests"
+      "pre-push": "npm run-script unit-tests",
+      "pre-receive": "npm run-script tests"
     }
   },
+
   "keywords": [
     "frame",
     "Buffer",
@@ -81,7 +89,15 @@
     "MSB",
     "LSB"
   ],
+
   "author": "Sébastien VIDAL",
+  "contributors": [
+    {
+      "name": "07ke",
+      "url": "https://github.com/07ke"
+    }
+  ],
+
   "license": "ISC",
 
   "homepage": "https://github.com/Psychopoulet/split-frames#readme",

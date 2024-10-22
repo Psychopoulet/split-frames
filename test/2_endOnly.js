@@ -1,7 +1,3 @@
-/*
-	eslint no-new: 0
-*/
-
 "use strict";
 
 // deps

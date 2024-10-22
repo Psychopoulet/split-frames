@@ -3,7 +3,7 @@
 
 		"target": "es6",
 		"module": "commonjs",
-		
+
 		"outDir": "./lib/cjs",
 
 		"declaration": true,
@@ -23,7 +23,7 @@
 
 	},
 	"include": [
-		"./src/main.cts"
+		"./lib/src/main.cts"
 	],
 	"exclude": [
 		"node_modules"

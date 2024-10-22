@@ -1,12 +1,7 @@
-/// <reference types="node" />
-/// <reference types="node" />
-/// <reference types="node" />
 import { Transform } from "node:stream";
-export declare type tTagObject = {
-    [key: string]: tTag;
-};
-export declare type tControlBits = "none" | "end+1" | "end+2";
-export declare type tTag = number | Buffer | Array<number> | Array<Buffer>;
+export type tTagObject = Record<string, tTag>;
+export type tControlBits = "none" | "end+1" | "end+2";
+export type tTag = number | Buffer | number[] | Buffer[];
 export interface iSearchedBits {
     "start": number;
     "end": number;
@@ -16,12 +11,12 @@ export interface iOptions {
     "startTimeout"?: number;
     "endWith"?: tTag;
     "escapeWith"?: tTag;
-    "escaped"?: Array<number>;
+    "escaped"?: number[];
     "specifics"?: tTagObject;
     "controlBits"?: tControlBits;
 }
 export interface iConf extends iOptions {
-    "escaped": Array<number>;
+    "escaped": number[];
     "specifics": tTagObject;
     "controlBits": tControlBits;
 }
