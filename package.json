@@ -19,7 +19,7 @@
 
   "scripts": {
 
-    "prepare": "npx husky install",
+    "prepare": "npx husky init",
 
     "clean": "npx rimraf lib",
     "build": "npm run-script clean && npx tsc --project \"./tsconfig.json\"",
@@ -44,15 +44,15 @@
 
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "20.11.0",
-    "check-version-modules": "2.0.0",
+    "@types/node": "22.7.8",
+    "check-version-modules": "2.1.2",
     "colors": "1.4.0",
     "eslint-plugin-personnallinter": "git+ssh://git@github.com/Psychopoulet/eslint-plugin-personnallinter",
-    "husky": "8.0.3",
-    "mocha": "10.2.0",
-    "nyc": "15.1.0",
-    "rimraf": "5.0.5",
-    "typescript": "5.3.3",
+    "husky": "9.1.6",
+    "mocha": "10.7.3",
+    "nyc": "17.1.0",
+    "rimraf": "6.0.1",
+    "typescript": "5.6.3",
     "used-deps-analyzer": "0.1.8"
   },
   "optionalDependencies": {},
