@@ -120,16 +120,16 @@ export default class SplitFrames extends Transform {
                 let digester: (() => void) | undefined = undefined;
 
                     if (undefined === this._startWith && undefined === this._endWith) {
-                        digester = this._digestNoStartNoEnd.bind(this);
+                        digester = this._digestNoStartNoEnd;
                     }
                     else if (undefined !== this._startWith && undefined === this._endWith) {
-                        digester = this._digestStartOnly.bind(this);
+                        digester = this._digestStartOnly;
                     }
                     else if (undefined === this._startWith && undefined !== this._endWith) {
-                        digester = this._digestEndOnly.bind(this);
+                        digester = this._digestEndOnly;
                     }
                     else {
-                        digester = this._digestStartAndEnd.bind(this);
+                        digester = this._digestStartAndEnd;
                     }
 
                 return digester as (enc?: BufferEncoding) => void;
@@ -188,7 +188,6 @@ export default class SplitFrames extends Transform {
                     this.push(Buffer.from(this._frame));
 
                     this._frame = Buffer.from([]);
-
                     this._digesting = false;
 
                 }
@@ -205,7 +204,6 @@ export default class SplitFrames extends Transform {
                     // no start tag detected
                     if (!firstStart) {
 
-                        this._frame = Buffer.from([]);
                         this._digesting = false;
 
                     }
@@ -263,7 +261,7 @@ export default class SplitFrames extends Transform {
 
                     this._extractSpecifics();
 
-                    const firstEnd: iSearchedBits | undefined = this._searchFirstEnd();
+                    const firstEnd: iSearchedBits | undefined = this._searchFirstEnd(0);
 
                     // no end tag detected
                     if (!firstEnd) {
@@ -355,7 +353,6 @@ export default class SplitFrames extends Transform {
                     // no start tag detected
                     if (!firstStart) {
 
-                        this._frame = Buffer.from([]);
                         this._digesting = false;
 
                     }
@@ -363,7 +360,7 @@ export default class SplitFrames extends Transform {
                     // start tag detected
                     else {
 
-                        const firstEnd: iSearchedBits | undefined = this._searchFirstEnd();
+                        const firstEnd: iSearchedBits | undefined = this._searchFirstEnd(firstStart.end);
 
                         // end tag not detected
                         if (!firstEnd) {
@@ -493,7 +490,10 @@ export default class SplitFrames extends Transform {
                             if (tag instanceof Buffer) {
 
                                 startAt = this._frame.indexOf(tag, beginAt);
-                                endAt = startAt + tag.length;
+
+                                if (-1 < startAt) {
+                                    endAt = startAt + tag.length;
+                                }
 
                             }
 
@@ -504,17 +504,19 @@ export default class SplitFrames extends Transform {
 
                                     // number | Buffer
                                     if ("number" === typeof tag[i]
-                                        || (
-                                            "object" === typeof tag[i]
-                                            && tag[i] instanceof Buffer
-                                        )
+                                        || ("object" === typeof tag[i]&& tag[i] instanceof Buffer)
                                     ) {
 
                                         const _startAt: number = this._frame.indexOf(tag[i], beginAt);
 
                                         if (-1 < _startAt && (-1 >= startAt || _startAt < startAt)) {
+
                                             startAt = _startAt;
-                                            endAt = startAt + ("number" === typeof tag[i] ? 1 : (tag[i] as Buffer).length);
+
+                                            if (-1 < startAt) {
+                                                endAt = startAt + ("number" === typeof tag[i] ? 1 : (tag[i] as Buffer).length);
+                                            }
+
                                         }
 
                                     }
@@ -534,9 +536,9 @@ export default class SplitFrames extends Transform {
                     return this._searchFirstTag(this._startWith);
                 }
 
-                private _searchFirstEnd (): iSearchedBits | undefined {
+                private _searchFirstEnd (startEndAt: number): iSearchedBits | undefined {
 
-                    const firstTag: iSearchedBits | undefined = this._searchFirstTag(this._endWith);
+                    const firstTag: iSearchedBits | undefined = this._searchFirstTag(this._endWith, startEndAt);
 
                         if (firstTag) {
 
