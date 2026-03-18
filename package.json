@@ -1,70 +1,50 @@
 {
 
   "name": "split-frames",
-
   "version": "2.5.1",
-
-  "description": "Split Buffer frames from streams",
+  "description": "Split Buffer frames from streams.",
 
   "type": "commonjs",
-
   "typings": "./lib/cjs/main.d.cts",
 
   "main": "./lib/cjs/main.cjs",
-
   "exports": {
-
     ".": {
-
       "require": {
-
         "types": "./lib/cjs/main.d.cts",
-
         "default": "./lib/cjs/main.cjs"
-
       }
-
     }
-
   },
 
   "scripts": {
 
-    "prepare": "npx husky init",
+    "prepare": "npx husky || true",
 
-    "clean": "npx rimraf lib/cjs",
+    "lint-back": "npx eslint --config .eslintrc-back.js --ext .ts,.cts,.mts ./lib/src/**/*",
+    "lint-tests": "npx eslint --config .eslintrc-tests.js --ext .js,.cjs,.mjs ./test/**/*",
+    "lint": "npm run lint-back && npm run lint-tests",
 
-    "build": "npm run-script clean && npx tsc --project \"./tsconfig.json\"",
+    "clean-back": "npx rimraf ./lib/cjs",
+    "clean": "npm run clean-back",
 
-    "lint": "npx eslint --config .eslintrc-src.js --ext .cts,.ts ./lib/src/**/* && npx eslint --config .eslintrc-tests.js ./bin/*.js ./test/**/*.js",
+    "build-back": "npm run clean-back && npx tsc --project ./tsconfig.json",
+    "build": "npm run build-back",
 
-    "check-requires": "npx used-deps-analyzer \"./package.json\" \"./lib/src\" --no-dev --overkill \"fs-extra\" \"node-promfs\"",
+    "check-requires": "npx used-deps-analyzer ./package.json ./lib/src --no-dev",
+    "check-updates": "npx check-version-modules --no-fail-at-major --fail-at-minor --fail-at-patch",
+    "unit-tests": "npm run build && npx nyc --reporter=html --reporter=text mocha",
 
-    "check-updates": "npx check-version-modules",
-
-    "unit-tests": "npm run-script build && npx nyc --reporter=html --reporter=text mocha",
-
-    "tests": "npm run-script lint && npm run-script check-requires && npm run-script check-updates && npm run-script unit-tests"
+    "tests": "npm run lint && npm run check-requires && npm run check-updates && npm run unit-tests"
 
   },
 
   "files": [
-
-    "/bin",
-
-    "/lib/cjs",
-
-    "/public"
-
+    "/lib/cjs"
   ],
-
   "engines": {
-
-    "node": ">=16.0.0"
-
+    "node": ">=22.22.0"
   },
-
-  "dependencies": {},
 
   "devDependencies": {
     "@types/node": "25.5.0",
@@ -79,101 +59,52 @@
     "used-deps-analyzer": "0.2.0"
   },
 
-  "optionalDependencies": {},
-
   "husky": {
-
     "hooks": {
-
-      "pre-commit": "npm run-script lint",
-
-      "pre-push": "npm run-script unit-tests",
-
-      "pre-receive": "npm run-script tests"
-
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run unit-tests"
     }
-
   },
-
   "keywords": [
-
     "frame",
-
     "Buffer",
-
     "buffer",
-
     "split",
-
     "formate",
-
     "parse",
-
     "escape",
-
     "bit",
-
     "stream",
-
     "Transform",
-
     "transform",
-
     "STX",
-
     "ETX",
-
     "ACK",
-
     "WAK",
-
     "NAK",
-
     "DLE",
-
     "industrial",
-
     "protocol",
-
     "LRC",
-
     "MSB",
-
     "LSB"
-
   ],
-
   "author": "Sébastien VIDAL",
-
   "contributors": [
-
     {
-
       "name": "07ke",
-
       "url": "https://github.com/07ke"
-
     }
-
   ],
-
   "license": "ISC",
 
   "homepage": "https://github.com/Psychopoulet/split-frames#readme",
-
   "repository": {
-
     "type": "git",
-
-    "url": "git://github.com/Psychopoulet/split-frames"
-
+    "url": "git://github.com/Psychopoulet/split-frames.git"
   },
-
   "bugs": {
-
     "url": "https://github.com/Psychopoulet/split-frames/issues"
-
   }
 
 }
-
