@@ -1,464 +1,567 @@
-"use strict";
-
 // deps
 
-	// natives
-	const assert = require("node:assert");
-	const { join } = require("node:path");
-	const { Readable } = require("node:stream");
+    // natives
+    const assert = require("node:assert");
+    const { join } = require("node:path");
+    const { Readable } = require("node:stream");
 
-	// locals
-	const SplitFrames = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+    // locals
+    const SplitFrames = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
 
 // consts
 
-	const STX = 0x02;
-	const ETX = 0x03;
-	const DLE = 0x10;
+    const STX = 0x02;
+    const ETX = 0x03;
+    const DLE = 0x10;
 
 // module
 
 describe("start & end", () => {
 
-	it("should split frame with no start", () => {
+    it("should split frame with no start", () => {
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			const splitter = new SplitFrames({
-				"startWith": STX,
-				"endWith": ETX
-			}).once("error", reject).once("data", (chunk) => {
+            const splitter = new SplitFrames({
+                "startWith": STX,
+                "endWith": ETX
+            }).once("error", reject).once("data", (chunk) => {
 
-				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-				assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, ETX ]), "The chunk is not as expected");
+                assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    STX, 0x24, ETX
+                ]), "The chunk is not as expected");
 
-				resolve();
+                resolve();
 
-			});
+            });
 
-			// tested frame
-			splitter.write(Buffer.from([ 0x24, 0x24, 0x25, 0x26, ETX ]));
-			// valid frame to close tested frame
-			splitter.write(Buffer.from([ STX, 0x24, ETX ]));
+            // tested frame
+            splitter.write(Buffer.from([
+                0x24, 0x24, 0x25, 0x26, ETX
+            ]));
 
-		});
+            // valid frame to close tested frame
+            splitter.write(Buffer.from([
+                STX, 0x24, ETX
+            ]));
 
-	});
+        });
 
-	it("should split frame with no end", () => {
+    });
 
-		return new Promise((resolve, reject) => {
+    it("should split frame with no end", () => {
 
-			const splitter = new SplitFrames({
-				"startWith": STX,
-				"endWith": ETX
-			}).once("error", reject).once("data", (chunk) => {
+        return new Promise((resolve, reject) => {
 
-				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-				assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x24, 0x25, 0x26, ETX ]), "The chunk is not as expected");
+            const splitter = new SplitFrames({
+                "startWith": STX,
+                "endWith": ETX
+            }).once("error", reject).once("data", (chunk) => {
 
-				resolve();
+                assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    STX, 0x24, 0x24, 0x25, 0x26, ETX
+                ]), "The chunk is not as expected");
 
-			});
+                resolve();
 
-			// tested frame
-			splitter.write(Buffer.from([ STX, 0x24, 0x24, 0x25, 0x26 ]));
-			// close tested frame
-			splitter.write(Buffer.from([ ETX ]));
+            });
 
-		});
+            // tested frame
+            splitter.write(Buffer.from([
+                STX, 0x24, 0x24, 0x25, 0x26
+            ]));
+            // close tested frame
+            splitter.write(Buffer.from([ ETX ]));
 
-	});
+        });
 
-	it("should split frame with one start & end", () => {
+    });
 
-		return new Promise((resolve, reject) => {
+    it("should split frame with one start & end", () => {
 
-			new SplitFrames({
-				"startWith": STX,
-				"endWith": ETX
-			}).once("error", reject).once("data", (chunk) => {
+        return new Promise((resolve, reject) => {
 
-				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-				assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, ETX ]), "The chunk is not as expected");
+            new SplitFrames({
+                "startWith": STX,
+                "endWith": ETX
+            }).once("error", reject).once("data", (chunk) => {
 
-				resolve();
+                assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    STX, 0x24, 0x25, ETX
+                ]), "The chunk is not as expected");
 
-			// tested frame
-			}).write(Buffer.from([ 0x24, STX, 0x24, 0x25, ETX, 0x24 ]));
+                resolve();
 
-		});
+            // tested frame
+            }).write(Buffer.from([
+                0x24, STX, 0x24, 0x25, ETX, 0x24
+            ]));
 
-	});
+        });
 
-	it("should split frame with two start & end", () => {
+    });
 
-		return new Promise((resolve, reject) => {
+    it("should split frame with two start & end", () => {
 
-			let dataCount = 0;
+        return new Promise((resolve, reject) => {
 
-			const splitter = new SplitFrames({
-				"startWith": STX,
-				"endWith": ETX
-			}).once("error", reject).on("data", (chunk) => {
+            let dataCount = 0;
 
-				++dataCount;
+            const splitter = new SplitFrames({
+                "startWith": STX,
+                "endWith": ETX
+            }).once("error", reject).on("data", (chunk) => {
 
-				if (1 === dataCount) {
+                ++dataCount;
 
-					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, ETX ]), "The chunk is not as expected");
+                if (1 === dataCount) {
 
-				}
-				else if (2 === dataCount) {
+                    assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                    assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x24, 0x25, ETX
+                    ]), "The chunk is not as expected");
 
-					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, ETX ]), "The chunk is not as expected");
+                }
+                else if (2 === dataCount) {
 
-					resolve();
+                    assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                    assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x24, ETX
+                    ]), "The chunk is not as expected");
 
-				}
+                    resolve();
 
-			});
+                }
 
-			// tested frame
-			splitter.write(Buffer.from([ 0x24, STX, 0x24, 0x25, ETX, 0x24 ]));
-			// close tested frame
-			splitter.write(Buffer.from([ STX, 0x24, ETX ]));
+            });
 
-		});
+            // tested frame
+            splitter.write(Buffer.from([
+                0x24, STX, 0x24, 0x25, ETX, 0x24
+            ]));
+            // close tested frame
+            splitter.write(Buffer.from([
+                STX, 0x24, ETX
+            ]));
 
-	});
+        });
 
-	it("should split frame with one bit start and two bits end", () => {
+    });
 
-		return new Promise((resolve, reject) => {
+    it("should split frame with one bit start and two bits end", () => {
 
-			new SplitFrames({
-				"startWith": STX,
-				"endWith": Buffer.from([ DLE, ETX ])
-			}).once("error", reject).once("data", (chunk) => {
+        return new Promise((resolve, reject) => {
 
-				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-				assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, 0x26, DLE, ETX ]), "The chunk is not as expected");
+            new SplitFrames({
+                "startWith": STX,
+                "endWith": Buffer.from([ DLE, ETX ])
+            }).once("error", reject).once("data", (chunk) => {
 
-				resolve();
+                assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    STX, 0x24, 0x25, 0x26, DLE, ETX
+                ]), "The chunk is not as expected");
 
-			// tested frame
-			}).write(Buffer.from([ 0x24, STX, 0x24, 0x25, 0x26, DLE, ETX, 0x27, 0x28, 0x29, DLE, ETX ]));
+                resolve();
 
-		});
+            // tested frame
+            }).write(Buffer.from([
+                0x24, STX, 0x24, 0x25, 0x26, DLE, ETX, 0x27, 0x28, 0x29, DLE, ETX
+            ]));
 
-	});
+        });
 
-	it("should split frame with two bits start and one bit end", () => {
+    });
 
-		return new Promise((resolve, reject) => {
+    it("should split frame with two bits start and one bit end", () => {
 
-			new SplitFrames({
-				"startWith": Buffer.from([ DLE, STX ]),
-				"endWith": ETX
-			}).once("error", reject).once("data", (chunk) => {
+        return new Promise((resolve, reject) => {
 
-				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-				assert.deepStrictEqual(chunk, Buffer.from([ DLE, STX, 0x24, 0x25, 0x26, ETX ]), "The chunk is not as expected");
+            new SplitFrames({
+                "startWith": Buffer.from([ DLE, STX ]),
+                "endWith": ETX
+            }).once("error", reject).once("data", (chunk) => {
 
-				resolve();
+                assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    DLE, STX, 0x24, 0x25, 0x26, ETX
+                ]), "The chunk is not as expected");
 
-			// tested frame
-			}).write(Buffer.from([ 0x24, DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX ]));
+                resolve();
 
-		});
+            // tested frame
+            }).write(Buffer.from([
+                0x24, DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX
+            ]));
 
-	});
+        });
 
-	it("should split frame with one bit start and two bits end", () => {
+    });
 
-		return new Promise((resolve, reject) => {
+    it("should split frame with one bit start and two bits end", () => {
 
-			new SplitFrames({
-				"startWith": STX,
-				"endWith": Buffer.from([ DLE, ETX ])
-			}).once("error", reject).once("data", (chunk) => {
+        return new Promise((resolve, reject) => {
 
-				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-				assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, 0x26, DLE, ETX ]), "The chunk is not as expected");
+            new SplitFrames({
+                "startWith": STX,
+                "endWith": Buffer.from([ DLE, ETX ])
+            }).once("error", reject).once("data", (chunk) => {
 
-				resolve();
+                assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    STX, 0x24, 0x25, 0x26, DLE, ETX
+                ]), "The chunk is not as expected");
 
-			// tested frame
-			}).write(Buffer.from([ 0x24, STX, 0x24, 0x25, 0x26, DLE, ETX, 0x27, 0x28, 0x29, DLE, ETX ]));
+                resolve();
 
-		});
+            // tested frame
+            }).write(Buffer.from([
+                0x24, STX, 0x24, 0x25, 0x26, DLE, ETX, 0x27, 0x28, 0x29, DLE, ETX
+            ]));
 
-	});
+        });
 
-	it("should split frame with two bits start and two bits end", () => {
+    });
 
-		return new Promise((resolve, reject) => {
+    it("should split frame with two bits start and two bits end", () => {
 
-			new SplitFrames({
-				"startWith": Buffer.from([ DLE, STX ]),
-				"endWith": Buffer.from([ DLE, ETX ])
-			}).once("error", reject).once("data", (chunk) => {
+        return new Promise((resolve, reject) => {
 
-				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-				assert.deepStrictEqual(chunk,
-					Buffer.from([ DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX ]),
-					"The chunk is not as expected"
-				);
+            new SplitFrames({
+                "startWith": Buffer.from([ DLE, STX ]),
+                "endWith": Buffer.from([ DLE, ETX ])
+            }).once("error", reject).once("data", (chunk) => {
 
-				resolve();
+                assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                assert.deepStrictEqual(chunk,
+                    Buffer.from([
+                        DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX
+                    ]),
+                    "The chunk is not as expected"
+                );
 
-			// tested frame
-			}).write(Buffer.from([ 0x24, DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX ]));
+                resolve();
 
-		});
+            // tested frame
+            }).write(Buffer.from([
+                0x24, DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX
+            ]));
 
-	});
+        });
 
-	it("should split frame with escaped data", () => {
+    });
 
-		return new Promise((resolve, reject) => {
+    it("should split frame with escaped data", () => {
 
-			new SplitFrames({
-				"startWith": STX,
-				"endWith": ETX,
-				"escapeWith": DLE,
-				"escaped": [ DLE, STX, ETX ]
-			}).once("error", reject).once("data", (chunk) => {
+        return new Promise((resolve, reject) => {
 
-				assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-				assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+            new SplitFrames({
+                "startWith": STX,
+                "endWith": ETX,
+                "escapeWith": DLE,
+                "escaped": [
+                    DLE, STX, ETX
+                ]
+            }).once("error", reject).once("data", (chunk) => {
 
-				assert.deepStrictEqual(chunk,
-					Buffer.from([ STX, 0x24, DLE, STX, 0x24, 0x25, DLE, DLE, 0x26, 0x27, DLE, ETX, 0x28, ETX ]),
-					"The chunk is not as expected"
-				);
+                assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
 
-				resolve();
+                assert.deepStrictEqual(chunk,
+                    Buffer.from([
+                        STX, 0x24, DLE, STX, 0x24, 0x25, DLE, DLE, 0x26, 0x27, DLE, ETX, 0x28, ETX
+                    ]),
+                    "The chunk is not as expected"
+                );
 
-			// tested frame
-			}).write(Buffer.from([ STX, 0x24, DLE, STX, 0x24, 0x25, DLE, DLE, 0x26, 0x27, DLE, ETX, 0x28, ETX ]));
+                resolve();
 
-		});
+            // tested frame
+            }).write(Buffer.from([
+                STX, 0x24, DLE, STX, 0x24, 0x25, DLE, DLE, 0x26, 0x27, DLE, ETX, 0x28, ETX
+            ]));
 
-	});
+        });
 
-	describe("control bits", () => {
+    });
 
-		it("should end with no control bit", () => {
+    describe("control bits", () => {
 
-			return new Promise((resolve, reject) => {
+        it("should end with no control bit", () => {
 
-				new SplitFrames({
-					"startWith": STX,
-					"endWith": ETX,
-					"controlBits": "none"
-				}).once("error", reject).once("data", (chunk) => {
+            return new Promise((resolve, reject) => {
 
-					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x20, 0x21, 0x22, 0x24, ETX ]), "The chunk is not as expected");
+                new SplitFrames({
+                    "startWith": STX,
+                    "endWith": ETX,
+                    "controlBits": "none"
+                }).once("error", reject).once("data", (chunk) => {
 
-					resolve();
+                    assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                    assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x20, 0x21, 0x22, 0x24, ETX
+                    ]), "The chunk is not as expected");
 
-				// tested frame
-				}).write(Buffer.from([ 0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24 ]));
+                    resolve();
 
-			});
+                // tested frame
+                }).write(Buffer.from([
+                    0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24
+                ]));
 
-		});
+            });
 
-		it("should end with one control bit", () => {
+        });
 
-			return new Promise((resolve, reject) => {
+        it("should end with one control bit", () => {
 
-				new SplitFrames({
-					"startWith": STX,
-					"endWith": ETX,
-					"controlBits": "end+1"
-				}).once("error", reject).once("data", (chunk) => {
+            return new Promise((resolve, reject) => {
 
-					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07 ]), "The chunk is not as expected");
+                new SplitFrames({
+                    "startWith": STX,
+                    "endWith": ETX,
+                    "controlBits": "end+1"
+                }).once("error", reject).once("data", (chunk) => {
 
-					resolve();
+                    assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                    assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07
+                    ]), "The chunk is not as expected");
 
-				// tested frame
-				}).write(Buffer.from([ 0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24 ]));
+                    resolve();
 
-			});
+                // tested frame
+                }).write(Buffer.from([
+                    0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24
+                ]));
 
-		});
+            });
 
-		it("should end with two control bits", () => {
+        });
 
-			return new Promise((resolve, reject) => {
+        it("should end with two control bits", () => {
 
-				new SplitFrames({
-					"startWith": STX,
-					"endWith": ETX,
-					"controlBits": "end+2"
-				}).once("error", reject).once("data", (chunk) => {
+            return new Promise((resolve, reject) => {
 
-					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24 ]), "The chunk is not as expected");
+                new SplitFrames({
+                    "startWith": STX,
+                    "endWith": ETX,
+                    "controlBits": "end+2"
+                }).once("error", reject).once("data", (chunk) => {
 
-					resolve();
+                    assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                    assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24
+                    ]), "The chunk is not as expected");
 
-				// tested frame
-				}).write(Buffer.from([ 0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24 ]));
+                    resolve();
 
-			});
+                // tested frame
+                }).write(Buffer.from([
+                    0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24
+                ]));
 
-		});
+            });
 
-	});
+        });
 
-	// made by 07ke
+    });
 
-	describe("with splitted chunks", () => {
+    // made by 07ke
 
-		const startWith = Buffer.from([ 0x28, 0x54, 0x59, 0x50, 0x45, 0x3a ])
-		const endWith = Buffer.from([ 0x29 ])
+    describe("with splitted chunks", () => {
 
-		const splitter = new SplitFrames({
-			"startWith": startWith,
-			"endWith": endWith
-		});
+        const startWith = Buffer.from([
+            0x28, 0x54, 0x59, 0x50, 0x45, 0x3a
+        ]);
+        const endWith = Buffer.from([ 0x29 ]);
 
-		const readder = new Readable({
-			read() {}
-		});
+        const splitter = new SplitFrames({
+            "startWith": startWith,
+            "endWith": endWith
+        });
 
-		const piped = readder.pipe(splitter);
+        const readder = new Readable({
+            read () {
+                // nothing to do here
+            }
+        });
 
-		it("should end with waited full chunk", () => {
+        const piped = readder.pipe(splitter);
 
-			const fullFrame = Buffer.concat([ startWith, Buffer.from([ 0x30, 0x31, 0x31, 0x31 ]), endWith ]);
+        it("should end with waited full chunk", () => {
 
-			return new Promise((resolve, reject) => {
+            const fullFrame = Buffer.concat([
+                startWith,
+                Buffer.from([
+                    0x30, 0x31, 0x31, 0x31
+                ]),
+                endWith
+            ]);
 
-				piped.once("error", reject).once("data", (chunk) => {
+            return new Promise((resolve, reject) => {
 
-					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, fullFrame, "The chunk is not as expected");
+                piped.once("error", reject).once("data", (chunk) => {
 
-					resolve();
+                    assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                    assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                    assert.deepStrictEqual(chunk, fullFrame, "The chunk is not as expected");
 
-				});
+                    resolve();
 
-				readder.push(fullFrame);
+                });
 
-			});
+                readder.push(fullFrame);
 
-		});
+            });
 
-		it("should test splitted chunk", () => {
+        });
 
-			const fullFrame = Buffer.concat([ startWith, Buffer.from([ 0x30, 0x31, 0x31, 0x32 ]), endWith ]);
+        it("should test splitted chunk", () => {
 
-			return new Promise((resolve, reject) => {
+            const fullFrame = Buffer.concat([
+                startWith,
+                Buffer.from([
+                    0x30, 0x31, 0x31, 0x32
+                ]),
+                endWith
+            ]);
 
-				piped.once("error", reject).once("data", (chunk) => {
+            return new Promise((resolve, reject) => {
 
-					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, fullFrame, "The chunk is not as expected");
+                piped.once("error", reject).once("data", (chunk) => {
 
-					resolve();
+                    assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                    assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                    assert.deepStrictEqual(chunk, fullFrame, "The chunk is not as expected");
 
-				});
+                    resolve();
 
-				readder.push(Buffer.from([ 0x28 ]));
-				readder.push(Buffer.from([ 0x54, 0x59, 0x50, 0x45, 0x3a, 0x30, 0x31, 0x31, 0x32, 0x29 ]));
+                });
 
-			});
+                readder.push(Buffer.from([ 0x28 ]));
+                readder.push(Buffer.from([
+                    0x54, 0x59, 0x50, 0x45, 0x3a, 0x30, 0x31, 0x31, 0x32, 0x29
+                ]));
 
-		});
+            });
 
-		it("should test splitted chunk", () => {
+        });
 
-			const fullFrame = Buffer.concat([ startWith, Buffer.from([ 0x30, 0x31, 0x31, 0x33 ]), endWith ]);
+        it("should test splitted chunk", () => {
 
-			return new Promise((resolve, reject) => {
+            const fullFrame = Buffer.concat([
+                startWith,
+                Buffer.from([
+                    0x30, 0x31, 0x31, 0x33
+                ]),
+                endWith
+            ]);
 
-				piped.once("error", reject).once("data", (chunk) => {
+            return new Promise((resolve, reject) => {
 
-					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, fullFrame, "The chunk is not as expected");
+                piped.once("error", reject).once("data", (chunk) => {
 
-					resolve();
+                    assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                    assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                    assert.deepStrictEqual(chunk, fullFrame, "The chunk is not as expected");
 
-				});
+                    resolve();
 
-				readder.push(Buffer.from([0x28, 0x54]));
-				readder.push(Buffer.from([0x59, 0x50, 0x45, 0x3a, 0x30, 0x31, 0x31, 0x33, 0x29]));
+                });
 
-			});
+                readder.push(Buffer.from([ 0x28, 0x54 ]));
+                readder.push(Buffer.from([
+                    0x59, 0x50, 0x45, 0x3a, 0x30, 0x31, 0x31, 0x33, 0x29
+                ]));
 
-		});
+            });
 
-		it("should test splitted chunk", () => {
+        });
 
-			const fullFrame = Buffer.concat([ startWith, Buffer.from([ 0x30, 0x31, 0x31, 0x34 ]), endWith ]);
+        it("should test splitted chunk", () => {
 
-			return new Promise((resolve, reject) => {
+            const fullFrame = Buffer.concat([
+                startWith,
+                Buffer.from([
+                    0x30, 0x31, 0x31, 0x34
+                ]),
+                endWith
+            ]);
 
-				piped.once("error", reject).once("data", (chunk) => {
+            return new Promise((resolve, reject) => {
 
-					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, fullFrame, "The chunk is not as expected");
+                piped.once("error", reject).once("data", (chunk) => {
 
-					resolve();
+                    assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                    assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                    assert.deepStrictEqual(chunk, fullFrame, "The chunk is not as expected");
 
-				});
+                    resolve();
 
-				readder.push(Buffer.from([0x28, 0x54, 0x59]));
-				readder.push(Buffer.from([0x50, 0x45, 0x3a, 0x30, 0x31, 0x31, 0x34, 0x29]));
+                });
 
-			});
+                readder.push(Buffer.from([
+                    0x28, 0x54, 0x59
+                ]));
 
-		});
+                readder.push(Buffer.from([
+                    0x50, 0x45, 0x3a, 0x30, 0x31, 0x31, 0x34, 0x29
+                ]));
 
-		it("should test splitted chunk", () => {
+            });
 
-			const fullFrame = Buffer.concat([ startWith, Buffer.from([ 0x30, 0x31, 0x31, 0x35 ]), endWith ]);
+        });
 
-			return new Promise((resolve, reject) => {
+        it("should test splitted chunk", () => {
 
-				piped.once("error", reject).once("data", (chunk) => {
+            const fullFrame = Buffer.concat([
+                startWith,
+                Buffer.from([
+                    0x30, 0x31, 0x31, 0x35
+                ]),
+                endWith
+            ]);
 
-					assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
-					assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-					assert.deepStrictEqual(chunk, fullFrame, "The chunk is not as expected");
+            return new Promise((resolve, reject) => {
 
-					resolve();
+                piped.once("error", reject).once("data", (chunk) => {
 
-				});
+                    assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
+                    assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
+                    assert.deepStrictEqual(chunk, fullFrame, "The chunk is not as expected");
 
-				readder.push(Buffer.from([0x28, 0x54, 0x59, 0x50, 0x45, 0x3a]));
-				readder.push(Buffer.from([0x30, 0x31, 0x31, 0x35, 0x29]));
+                    resolve();
 
-			});
+                });
 
-		});
+                readder.push(Buffer.from([
+                    0x28, 0x54, 0x59, 0x50, 0x45, 0x3a
+                ]));
 
-	});
+                readder.push(Buffer.from([
+                    0x30, 0x31, 0x31, 0x35, 0x29
+                ]));
+
+            });
+
+        });
+
+    });
 
 });

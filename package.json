@@ -1,7 +1,7 @@
 {
 
   "name": "split-frames",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "description": "Split Buffer frames from streams.",
 
   "type": "commonjs",
@@ -40,12 +40,13 @@
   },
 
   "files": [
-    "/lib/cjs"
+    "lib/cjs"
   ],
   "engines": {
     "node": ">=22.22.0"
   },
 
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "25.5.0",
     "check-version-modules": "2.2.2",
