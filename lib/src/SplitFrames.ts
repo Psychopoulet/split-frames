@@ -97,7 +97,7 @@ export default class SplitFrames extends Transform {
 
         // public
 
-            public _transform (chunk: Buffer, enc: BufferEncoding, cb: (err?: Error | null, data?: any) => void): void {
+            public _transform (chunk: Buffer, enc: BufferEncoding, cb: (err?: Error | null, data?: unknown) => void): void {
 
                 if (chunk.length) {
 
@@ -504,7 +504,7 @@ export default class SplitFrames extends Transform {
 
                                     // number | Buffer
                                     if ("number" === typeof tag[i]
-                                        || ("object" === typeof tag[i]&& tag[i] instanceof Buffer)
+                                        || ("object" === typeof tag[i] && tag[i] instanceof Buffer)
                                     ) {
 
                                         const _startAt: number = this._frame.indexOf(tag[i], beginAt);

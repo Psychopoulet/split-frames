@@ -33,7 +33,7 @@ export default class SplitFrames extends Transform {
     protected _controlBits: iConf["controlBits"];
     protected _digester: (enc?: BufferEncoding) => void;
     constructor(options?: iOptions);
-    _transform(chunk: Buffer, enc: BufferEncoding, cb: (err?: Error | null, data?: any) => void): void;
+    _transform(chunk: Buffer, enc: BufferEncoding, cb: (err?: Error | null, data?: unknown) => void): void;
     protected _chooseDigester(): (enc?: BufferEncoding) => void;
     protected _digest(enc?: BufferEncoding): void;
     private _digestNoStartNoEnd;

@@ -14,10 +14,14 @@ export default function checkTagsValidity (tags: tTag): boolean {
         }
         else if ("object" === typeof tags && tags instanceof Array) {
 
-            for (let i: number = 0; i < tags.length; ++i) {
+            for (const tag of tags) {
 
-                if ("number" !== typeof tags[i] && "object" !== typeof tags[i] && !(tags[i] instanceof Buffer)) {
-                    result = false; break;
+                if ("number" !== typeof tag) {
+
+                    if ("object" !== typeof tag || !(tag instanceof Buffer)) {
+                        result = false; break;
+                    }
+
                 }
 
             }
