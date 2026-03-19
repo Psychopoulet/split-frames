@@ -6,7 +6,7 @@ import { Readable } from "node:stream";
 const STX = 0x02, ETX = 0x03, DLE = 0x10, ACK = 0x06, NAK = 0x15, WAK = 0x13;
 
 const stream = new Readable({
-	read () { }
+    read () { }
 });
 
 stream.pipe(new SplitFrames({
@@ -30,7 +30,7 @@ stream.pipe(new SplitFrames({
 }).on("whatever", () => {
     console.log("whatever received"); // (only 1x)
 }).on("data", (chunk) => {
-	console.log(chunk);
+    console.log(chunk);
     // Buffer([ STX, 0x20, 0x21, 0x22, ACK, NAK, WAK, 0x23, ETX, 0x01 ]) (x1)
 });
 

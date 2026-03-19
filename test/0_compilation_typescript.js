@@ -1,89 +1,87 @@
-
-"use strict";
-
 // deps
 
-	// natives
-	const { exec } = require("node:child_process");
-	const { join } = require("node:path");
-	const { unlink } = require("node:fs/promises");
-	const { lstat } = require("node:fs");
+    // natives
+    const { exec } = require("node:child_process");
+    const { join } = require("node:path");
+    const { unlink } = require("node:fs/promises");
+    const { lstat } = require("node:fs");
 
 // consts
 
-	const MAX_TIMEOUT = 10000;
+    const MAX_TIMEOUT = 10000;
 
 // tests
 
 describe("compilation typescript", () => {
 
-	const compilationSource = join(__dirname, "typescript", "compilation.cts");
-	const compilationTarget = join(__dirname, "typescript", "compilation.cjs");
+    const compilationSource = join(__dirname, "typescript", "compilation.cts");
+    const compilationTarget = join(__dirname, "typescript", "compilation.cjs");
 
-	before(() => {
+    before(() => {
 
-		return new Promise((resolve) => {
+        return new Promise((resolve) => {
 
-			lstat(compilationTarget, (err, stats) => {
-				return resolve(Boolean(!err && stats.isFile()));
-			});
+            lstat(compilationTarget, (err, stats) => {
+                return resolve(Boolean(!err && stats.isFile()));
+            });
 
-		}).then((exists) => {
-			return exists ? unlink(compilationTarget) : Promise.resolve();
-		});
+        }).then((exists) => {
+            return exists ? unlink(compilationTarget) : Promise.resolve();
+        });
 
-	});
+    });
 
-	after(() => {
+    after(() => {
 
-		return new Promise((resolve) => {
+        return new Promise((resolve) => {
 
-			lstat(compilationTarget, (err, stats) => {
-				return resolve(Boolean(!err && stats.isFile()));
-			});
+            lstat(compilationTarget, (err, stats) => {
+                return resolve(Boolean(!err && stats.isFile()));
+            });
 
-		}).then((exists) => {
-			return exists ? unlink(compilationTarget) : Promise.resolve();
-		});
+        }).then((exists) => {
+            return exists ? unlink(compilationTarget) : Promise.resolve();
+        });
 
-	});
+    });
 
-	it("should compile typescript file", () => {
+    it("should compile typescript file", () => {
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			const args = [
-				"npx tsc",
-				compilationSource,
-				"--target es6",
-				"--module commonjs"
-			];
+            const args = [
+                "npx tsc",
+                compilationSource,
+                "--target es6",
+                "--module commonjs",
+                "--esModuleInterop"
+            ];
 
-			exec(args.join(" "), {
-				"cwd": join(__dirname, ".."),
-				"windowsHide": true
-			}, (err) => {
-				return err ? reject(err) : resolve();
-			});
+            exec(args.join(" "), {
+                "cwd": join(__dirname, ".."),
+                "windowsHide": true
+            }, (err) => {
+                return err ? reject(err) : resolve();
+            });
 
-		});
+        });
 
-	}).timeout(MAX_TIMEOUT);
+    }).timeout(MAX_TIMEOUT);
 
-	it("should exec compiled typescript file", (done) => {
+    it("should exec compiled typescript file", (done) => {
 
-		const args = [
-			"node",
-			compilationTarget
-		];
+        const args = [
+            "node",
+            compilationTarget
+        ];
 
-		exec(args.join(" "), {
-			"cwd": join(__dirname, ".."),
-			"windowsHide": true
-		}, (err) => {
-			return err ? done(err) : done();
-		});
+        exec(args.join(" "), {
+            "cwd": join(__dirname, ".."),
+            "windowsHide": true
+        }, (err) => {
+            return err ? done(err) : done();
+        });
 
-	});
+    });
 
 });
