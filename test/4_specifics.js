@@ -35,7 +35,9 @@ describe("specifics", () => {
 
                     assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                     assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                    assert.deepStrictEqual(chunk, Buffer.from([ 0x01, DLE, 0x02 ]), "The chunk is not as expected");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        0x01, DLE, 0x02
+                    ]), "The chunk is not as expected");
 
                     assert.strictEqual(count, 3, "The amount of \"ack\" received is not as expected");
 
@@ -45,7 +47,9 @@ describe("specifics", () => {
                     ++count;
                 });
 
-                splitter.write(Buffer.from([ ACK, 0x01, DLE, ACK, 0x02, ACK ]));
+                splitter.write(Buffer.from([
+                    ACK, 0x01, DLE, ACK, 0x02, ACK
+                ]));
 
             });
 
@@ -75,7 +79,9 @@ describe("specifics", () => {
                     ++count;
                 });
 
-                splitter.write(Buffer.from([ DLE, ACK, 0x01, DLE, ACK, 0x02, DLE, ACK ]));
+                splitter.write(Buffer.from([
+                    DLE, ACK, 0x01, DLE, ACK, 0x02, DLE, ACK
+                ]));
 
             });
 
@@ -97,7 +103,9 @@ describe("specifics", () => {
 
                     assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                     assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                    assert.deepStrictEqual(chunk, Buffer.from([ 0x01, DLE, ACK, 0x02 ]), "The chunk is not as expected");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        0x01, DLE, ACK, 0x02
+                    ]), "The chunk is not as expected");
 
                     assert.strictEqual(count, 2, "The amount of \"ack\" received is not as expected");
 
@@ -107,7 +115,9 @@ describe("specifics", () => {
                     ++count;
                 });
 
-                splitter.write(Buffer.from([ ACK, 0x01, DLE, ACK, 0x02, ACK ]));
+                splitter.write(Buffer.from([
+                    ACK, 0x01, DLE, ACK, 0x02, ACK
+                ]));
 
             });
 
@@ -129,7 +139,9 @@ describe("specifics", () => {
 
                     assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                     assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                    assert.deepStrictEqual(chunk, Buffer.from([ 0x01, DLE, 0x02 ]), "The chunk is not as expected");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        0x01, DLE, 0x02
+                    ]), "The chunk is not as expected");
 
                     assert.strictEqual(count, 3, "The amount of \"ack\" received is not as expected");
 
@@ -139,7 +151,9 @@ describe("specifics", () => {
                     ++count;
                 });
 
-                splitter.write(Buffer.from([ ACK, 0x01, DLE, ACK2, 0x02, ACK ]));
+                splitter.write(Buffer.from([
+                    ACK, 0x01, DLE, ACK2, 0x02, ACK
+                ]));
 
             });
 
@@ -176,7 +190,9 @@ describe("specifics", () => {
                     },
                     "endWith": ETX,
                     "escapeWith": DLE,
-                    "escaped": [ DLE, ACK, NAK ]
+                    "escaped": [
+                        DLE, ACK, NAK
+                    ]
                 }).once("error", reject).on("data", (chunk) => {
 
                     ++countData;
@@ -185,10 +201,14 @@ describe("specifics", () => {
                     assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
 
                     if (1 === countData) {
-                        assert.deepStrictEqual(chunk, Buffer.from([ DLE, ACK, 0x21, 0x21, 0x21, 0x21, ETX ]), "The chunk is not as expected");
+                        assert.deepStrictEqual(chunk, Buffer.from([
+                            DLE, ACK, 0x21, 0x21, 0x21, 0x21, ETX
+                        ]), "The chunk is not as expected");
                     }
                     else if (2 === countData) {
-                        assert.deepStrictEqual(chunk, Buffer.from([ 0x24, 0x25, 0x27, ETX ]), "The chunk is not as expected");
+                        assert.deepStrictEqual(chunk, Buffer.from([
+                            0x24, 0x25, 0x27, ETX
+                        ]), "The chunk is not as expected");
                         assert.strictEqual(countData, 5, "The amount of \"ack\" received is not as expected");
                     }
 
@@ -200,7 +220,9 @@ describe("specifics", () => {
                         resolve();
                     }
 
-                }).write(Buffer.from([ ACK, NAK, ACK, ACK, DLE, ACK, 0x21, 0x21, 0x21, 0x21, ETX, ACK, NAK, ACK, 0x24, 0x25, 0x27, ETX ]));
+                }).write(Buffer.from([
+                    ACK, NAK, ACK, ACK, DLE, ACK, 0x21, 0x21, 0x21, 0x21, ETX, ACK, NAK, ACK, 0x24, 0x25, 0x27, ETX
+                ]));
 
             });
 
@@ -224,7 +246,9 @@ describe("specifics", () => {
 
                     assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                     assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                    assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, 0x27, ETX ]), "The chunk is not as expected");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x24, 0x25, 0x27, ETX
+                    ]), "The chunk is not as expected");
 
                     assert.strictEqual(count, 3, "The amount of \"ack\" received is not as expected");
 
@@ -236,7 +260,9 @@ describe("specifics", () => {
                         resolve();
                     }
 
-                }).write(Buffer.from([ ACK, 0x21, ACK, 0x21, 0x21, ACK, 0x21, DLE, ACK, STX, 0x24, 0x25, 0x27, ETX, ACK ]));
+                }).write(Buffer.from([
+                    ACK, 0x21, ACK, 0x21, 0x21, ACK, 0x21, DLE, ACK, STX, 0x24, 0x25, 0x27, ETX, ACK
+                ]));
 
             });
 
@@ -258,7 +284,9 @@ describe("specifics", () => {
 
                     assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                     assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                    assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, 0x27, ETX ]), "The chunk is not as expected");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x24, 0x25, 0x27, ETX
+                    ]), "The chunk is not as expected");
 
                     assert.strictEqual(count, 3, "The amount of \"ack\" received is not as expected");
 
@@ -270,7 +298,9 @@ describe("specifics", () => {
                         resolve();
                     }
 
-                }).write(Buffer.from([ DLE, ACK, 0x21, DLE, ACK, 0x21, 0x21, DLE, ACK, 0x21, STX, 0x24, 0x25, 0x27, ETX, DLE, ACK ]));
+                }).write(Buffer.from([
+                    DLE, ACK, 0x21, DLE, ACK, 0x21, 0x21, DLE, ACK, 0x21, STX, 0x24, 0x25, 0x27, ETX, DLE, ACK
+                ]));
 
             });
 

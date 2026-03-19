@@ -29,16 +29,23 @@ describe("start & end", () => {
 
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, ETX ]), "The chunk is not as expected");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    STX, 0x24, ETX
+                ]), "The chunk is not as expected");
 
                 resolve();
 
             });
 
             // tested frame
-            splitter.write(Buffer.from([ 0x24, 0x24, 0x25, 0x26, ETX ]));
+            splitter.write(Buffer.from([
+                0x24, 0x24, 0x25, 0x26, ETX
+            ]));
+
             // valid frame to close tested frame
-            splitter.write(Buffer.from([ STX, 0x24, ETX ]));
+            splitter.write(Buffer.from([
+                STX, 0x24, ETX
+            ]));
 
         });
 
@@ -55,14 +62,18 @@ describe("start & end", () => {
 
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x24, 0x25, 0x26, ETX ]), "The chunk is not as expected");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    STX, 0x24, 0x24, 0x25, 0x26, ETX
+                ]), "The chunk is not as expected");
 
                 resolve();
 
             });
 
             // tested frame
-            splitter.write(Buffer.from([ STX, 0x24, 0x24, 0x25, 0x26 ]));
+            splitter.write(Buffer.from([
+                STX, 0x24, 0x24, 0x25, 0x26
+            ]));
             // close tested frame
             splitter.write(Buffer.from([ ETX ]));
 
@@ -81,12 +92,16 @@ describe("start & end", () => {
 
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, ETX ]), "The chunk is not as expected");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    STX, 0x24, 0x25, ETX
+                ]), "The chunk is not as expected");
 
                 resolve();
 
             // tested frame
-            }).write(Buffer.from([ 0x24, STX, 0x24, 0x25, ETX, 0x24 ]));
+            }).write(Buffer.from([
+                0x24, STX, 0x24, 0x25, ETX, 0x24
+            ]));
 
         });
 
@@ -109,14 +124,18 @@ describe("start & end", () => {
 
                     assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                     assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                    assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, ETX ]), "The chunk is not as expected");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x24, 0x25, ETX
+                    ]), "The chunk is not as expected");
 
                 }
                 else if (2 === dataCount) {
 
                     assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                     assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                    assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, ETX ]), "The chunk is not as expected");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x24, ETX
+                    ]), "The chunk is not as expected");
 
                     resolve();
 
@@ -125,9 +144,13 @@ describe("start & end", () => {
             });
 
             // tested frame
-            splitter.write(Buffer.from([ 0x24, STX, 0x24, 0x25, ETX, 0x24 ]));
+            splitter.write(Buffer.from([
+                0x24, STX, 0x24, 0x25, ETX, 0x24
+            ]));
             // close tested frame
-            splitter.write(Buffer.from([ STX, 0x24, ETX ]));
+            splitter.write(Buffer.from([
+                STX, 0x24, ETX
+            ]));
 
         });
 
@@ -144,12 +167,16 @@ describe("start & end", () => {
 
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, 0x26, DLE, ETX ]), "The chunk is not as expected");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    STX, 0x24, 0x25, 0x26, DLE, ETX
+                ]), "The chunk is not as expected");
 
                 resolve();
 
             // tested frame
-            }).write(Buffer.from([ 0x24, STX, 0x24, 0x25, 0x26, DLE, ETX, 0x27, 0x28, 0x29, DLE, ETX ]));
+            }).write(Buffer.from([
+                0x24, STX, 0x24, 0x25, 0x26, DLE, ETX, 0x27, 0x28, 0x29, DLE, ETX
+            ]));
 
         });
 
@@ -166,12 +193,16 @@ describe("start & end", () => {
 
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                assert.deepStrictEqual(chunk, Buffer.from([ DLE, STX, 0x24, 0x25, 0x26, ETX ]), "The chunk is not as expected");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    DLE, STX, 0x24, 0x25, 0x26, ETX
+                ]), "The chunk is not as expected");
 
                 resolve();
 
             // tested frame
-            }).write(Buffer.from([ 0x24, DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX ]));
+            }).write(Buffer.from([
+                0x24, DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX
+            ]));
 
         });
 
@@ -188,12 +219,16 @@ describe("start & end", () => {
 
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, 0x26, DLE, ETX ]), "The chunk is not as expected");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    STX, 0x24, 0x25, 0x26, DLE, ETX
+                ]), "The chunk is not as expected");
 
                 resolve();
 
             // tested frame
-            }).write(Buffer.from([ 0x24, STX, 0x24, 0x25, 0x26, DLE, ETX, 0x27, 0x28, 0x29, DLE, ETX ]));
+            }).write(Buffer.from([
+                0x24, STX, 0x24, 0x25, 0x26, DLE, ETX, 0x27, 0x28, 0x29, DLE, ETX
+            ]));
 
         });
 
@@ -211,14 +246,18 @@ describe("start & end", () => {
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
                 assert.deepStrictEqual(chunk,
-                    Buffer.from([ DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX ]),
+                    Buffer.from([
+                        DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX
+                    ]),
                     "The chunk is not as expected"
                 );
 
                 resolve();
 
             // tested frame
-            }).write(Buffer.from([ 0x24, DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX ]));
+            }).write(Buffer.from([
+                0x24, DLE, STX, 0x24, 0x25, 0x26, ETX, 0x27, 0x28, 0x29, DLE, ETX
+            ]));
 
         });
 
@@ -232,21 +271,27 @@ describe("start & end", () => {
                 "startWith": STX,
                 "endWith": ETX,
                 "escapeWith": DLE,
-                "escaped": [ DLE, STX, ETX ]
+                "escaped": [
+                    DLE, STX, ETX
+                ]
             }).once("error", reject).once("data", (chunk) => {
 
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
 
                 assert.deepStrictEqual(chunk,
-                    Buffer.from([ STX, 0x24, DLE, STX, 0x24, 0x25, DLE, DLE, 0x26, 0x27, DLE, ETX, 0x28, ETX ]),
+                    Buffer.from([
+                        STX, 0x24, DLE, STX, 0x24, 0x25, DLE, DLE, 0x26, 0x27, DLE, ETX, 0x28, ETX
+                    ]),
                     "The chunk is not as expected"
                 );
 
                 resolve();
 
             // tested frame
-            }).write(Buffer.from([ STX, 0x24, DLE, STX, 0x24, 0x25, DLE, DLE, 0x26, 0x27, DLE, ETX, 0x28, ETX ]));
+            }).write(Buffer.from([
+                STX, 0x24, DLE, STX, 0x24, 0x25, DLE, DLE, 0x26, 0x27, DLE, ETX, 0x28, ETX
+            ]));
 
         });
 
@@ -266,12 +311,16 @@ describe("start & end", () => {
 
                     assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                     assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                    assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x20, 0x21, 0x22, 0x24, ETX ]), "The chunk is not as expected");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x20, 0x21, 0x22, 0x24, ETX
+                    ]), "The chunk is not as expected");
 
                     resolve();
 
                 // tested frame
-                }).write(Buffer.from([ 0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24 ]));
+                }).write(Buffer.from([
+                    0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24
+                ]));
 
             });
 
@@ -289,12 +338,16 @@ describe("start & end", () => {
 
                     assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                     assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                    assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07 ]), "The chunk is not as expected");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07
+                    ]), "The chunk is not as expected");
 
                     resolve();
 
                 // tested frame
-                }).write(Buffer.from([ 0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24 ]));
+                }).write(Buffer.from([
+                    0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24
+                ]));
 
             });
 
@@ -312,12 +365,16 @@ describe("start & end", () => {
 
                     assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                     assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                    assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24 ]), "The chunk is not as expected");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24
+                    ]), "The chunk is not as expected");
 
                     resolve();
 
                 // tested frame
-                }).write(Buffer.from([ 0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24 ]));
+                }).write(Buffer.from([
+                    0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24
+                ]));
 
             });
 
@@ -329,8 +386,10 @@ describe("start & end", () => {
 
     describe("with splitted chunks", () => {
 
-        const startWith = Buffer.from([ 0x28, 0x54, 0x59, 0x50, 0x45, 0x3a ])
-        const endWith = Buffer.from([ 0x29 ])
+        const startWith = Buffer.from([
+            0x28, 0x54, 0x59, 0x50, 0x45, 0x3a
+        ]);
+        const endWith = Buffer.from([ 0x29 ]);
 
         const splitter = new SplitFrames({
             "startWith": startWith,
@@ -338,14 +397,20 @@ describe("start & end", () => {
         });
 
         const readder = new Readable({
-            read() {}
+            read () {}
         });
 
         const piped = readder.pipe(splitter);
 
         it("should end with waited full chunk", () => {
 
-            const fullFrame = Buffer.concat([ startWith, Buffer.from([ 0x30, 0x31, 0x31, 0x31 ]), endWith ]);
+            const fullFrame = Buffer.concat([
+                startWith,
+                Buffer.from([
+                    0x30, 0x31, 0x31, 0x31
+                ]),
+                endWith
+            ]);
 
             return new Promise((resolve, reject) => {
 
@@ -367,7 +432,13 @@ describe("start & end", () => {
 
         it("should test splitted chunk", () => {
 
-            const fullFrame = Buffer.concat([ startWith, Buffer.from([ 0x30, 0x31, 0x31, 0x32 ]), endWith ]);
+            const fullFrame = Buffer.concat([
+                startWith,
+                Buffer.from([
+                    0x30, 0x31, 0x31, 0x32
+                ]),
+                endWith
+            ]);
 
             return new Promise((resolve, reject) => {
 
@@ -382,7 +453,9 @@ describe("start & end", () => {
                 });
 
                 readder.push(Buffer.from([ 0x28 ]));
-                readder.push(Buffer.from([ 0x54, 0x59, 0x50, 0x45, 0x3a, 0x30, 0x31, 0x31, 0x32, 0x29 ]));
+                readder.push(Buffer.from([
+                    0x54, 0x59, 0x50, 0x45, 0x3a, 0x30, 0x31, 0x31, 0x32, 0x29
+                ]));
 
             });
 
@@ -390,7 +463,13 @@ describe("start & end", () => {
 
         it("should test splitted chunk", () => {
 
-            const fullFrame = Buffer.concat([ startWith, Buffer.from([ 0x30, 0x31, 0x31, 0x33 ]), endWith ]);
+            const fullFrame = Buffer.concat([
+                startWith,
+                Buffer.from([
+                    0x30, 0x31, 0x31, 0x33
+                ]),
+                endWith
+            ]);
 
             return new Promise((resolve, reject) => {
 
@@ -404,8 +483,10 @@ describe("start & end", () => {
 
                 });
 
-                readder.push(Buffer.from([0x28, 0x54]));
-                readder.push(Buffer.from([0x59, 0x50, 0x45, 0x3a, 0x30, 0x31, 0x31, 0x33, 0x29]));
+                readder.push(Buffer.from([ 0x28, 0x54 ]));
+                readder.push(Buffer.from([
+                    0x59, 0x50, 0x45, 0x3a, 0x30, 0x31, 0x31, 0x33, 0x29
+                ]));
 
             });
 
@@ -413,7 +494,13 @@ describe("start & end", () => {
 
         it("should test splitted chunk", () => {
 
-            const fullFrame = Buffer.concat([ startWith, Buffer.from([ 0x30, 0x31, 0x31, 0x34 ]), endWith ]);
+            const fullFrame = Buffer.concat([
+                startWith,
+                Buffer.from([
+                    0x30, 0x31, 0x31, 0x34
+                ]),
+                endWith
+            ]);
 
             return new Promise((resolve, reject) => {
 
@@ -427,8 +514,13 @@ describe("start & end", () => {
 
                 });
 
-                readder.push(Buffer.from([0x28, 0x54, 0x59]));
-                readder.push(Buffer.from([0x50, 0x45, 0x3a, 0x30, 0x31, 0x31, 0x34, 0x29]));
+                readder.push(Buffer.from([
+                    0x28, 0x54, 0x59
+                ]));
+
+                readder.push(Buffer.from([
+                    0x50, 0x45, 0x3a, 0x30, 0x31, 0x31, 0x34, 0x29
+                ]));
 
             });
 
@@ -436,7 +528,13 @@ describe("start & end", () => {
 
         it("should test splitted chunk", () => {
 
-            const fullFrame = Buffer.concat([ startWith, Buffer.from([ 0x30, 0x31, 0x31, 0x35 ]), endWith ]);
+            const fullFrame = Buffer.concat([
+                startWith,
+                Buffer.from([
+                    0x30, 0x31, 0x31, 0x35
+                ]),
+                endWith
+            ]);
 
             return new Promise((resolve, reject) => {
 
@@ -450,8 +548,13 @@ describe("start & end", () => {
 
                 });
 
-                readder.push(Buffer.from([0x28, 0x54, 0x59, 0x50, 0x45, 0x3a]));
-                readder.push(Buffer.from([0x30, 0x31, 0x31, 0x35, 0x29]));
+                readder.push(Buffer.from([
+                    0x28, 0x54, 0x59, 0x50, 0x45, 0x3a
+                ]));
+
+                readder.push(Buffer.from([
+                    0x30, 0x31, 0x31, 0x35, 0x29
+                ]));
 
             });
 

@@ -74,16 +74,26 @@ describe("documentation", () => {
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
 
                 if (1 === dataCount) {
-                    assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, 0x26 ]), "The chunk is not as expected");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x24, 0x25, 0x26
+                    ]), "The chunk is not as expected");
                 }
                 else if (2 === dataCount) {
-                    assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25 ]), "The chunk is not as expected");
+
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x24, 0x25
+                    ]), "The chunk is not as expected");
+
                     resolve();
+
                 }
 
             });
 
-            stream.push(Buffer.from([ 0x20, STX, 0x24, 0x25, 0x26, STX, 0x24 ]));
+            stream.push(Buffer.from([
+                0x20, STX, 0x24, 0x25, 0x26, STX, 0x24
+            ]));
+
             stream.push(Buffer.from([ 0x25, STX ]));
 
         });
@@ -108,16 +118,26 @@ describe("documentation", () => {
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
 
                 if (1 === dataCount) {
-                    assert.deepStrictEqual(chunk, Buffer.from([ 0x24, 0x25, 0x26, ETX ]), "The chunk is not as expected");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        0x24, 0x25, 0x26, ETX
+                    ]), "The chunk is not as expected");
                 }
                 else if (2 === dataCount) {
-                    assert.deepStrictEqual(chunk, Buffer.from([ 0x24, 0x25, ETX ]), "The chunk is not as expected");
+
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        0x24, 0x25, ETX
+                    ]), "The chunk is not as expected");
+
                     resolve();
+
                 }
 
             });
 
-            stream.push(Buffer.from([ 0x24, 0x25, 0x26, ETX, 0x24, 0x25 ]));
+            stream.push(Buffer.from([
+                0x24, 0x25, 0x26, ETX, 0x24, 0x25
+            ]));
+
             stream.push(Buffer.from([ ETX ]));
 
         });
@@ -143,17 +163,29 @@ describe("documentation", () => {
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
 
                 if (1 === dataCount) {
-                    assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, 0x26, ETX ]), "The chunk is not as expected");
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x24, 0x25, 0x26, ETX
+                    ]), "The chunk is not as expected");
                 }
                 else if (2 === dataCount) {
-                    assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, ETX ]), "The chunk is not as expected");
+
+                    assert.deepStrictEqual(chunk, Buffer.from([
+                        STX, 0x24, 0x25, ETX
+                    ]), "The chunk is not as expected");
+
                     resolve();
+
                 }
 
             });
 
-            stream.push(Buffer.from([ 0x20, STX, 0x24, 0x25, 0x26, ETX, 0x24, 0x25, STX ]));
-            stream.push(Buffer.from([ 0x24, 0x25, ETX ]));
+            stream.push(Buffer.from([
+                0x20, STX, 0x24, 0x25, 0x26, ETX, 0x24, 0x25, STX
+            ]));
+
+            stream.push(Buffer.from([
+                0x24, 0x25, ETX
+            ]));
 
         });
 
@@ -172,13 +204,17 @@ describe("documentation", () => {
 
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x24, 0x25, 0x26, DLE, ETX ]), "The chunk is not as expected");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    STX, 0x24, 0x25, 0x26, DLE, ETX
+                ]), "The chunk is not as expected");
 
                 resolve();
 
             });
 
-            stream.push(Buffer.from([ 0x24, STX, 0x24, 0x25, 0x26, DLE, ETX, STX, 0x24, 0x25 ]));
+            stream.push(Buffer.from([
+                0x24, STX, 0x24, 0x25, 0x26, DLE, ETX, STX, 0x24, 0x25
+            ]));
 
         });
 
@@ -194,14 +230,18 @@ describe("documentation", () => {
                 "startWith": STX,
                 "endWith": ETX,
                 "escapeWith": DLE,
-                "escaped": [ DLE, STX, ETX ]
+                "escaped": [
+                    DLE, STX, ETX
+                ]
             })).on("data", (chunk) => {
 
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
 
                 assert.deepStrictEqual(chunk,
-                    Buffer.from([ STX, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x27, DLE, ETX, 0x28, ETX ]),
+                    Buffer.from([
+                        STX, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x27, DLE, ETX, 0x28, ETX
+                    ]),
                     "The chunk is not as expected"
                 );
 
@@ -209,8 +249,13 @@ describe("documentation", () => {
 
             });
 
-            stream.push(Buffer.from([ 0x20, STX, 0x24, DLE, STX, 0x25, 0x26 ]));
-            stream.push(Buffer.from([ DLE, DLE, 0x27, DLE, ETX, 0x28, ETX, STX, 0x24, 0x25 ]));
+            stream.push(Buffer.from([
+                0x20, STX, 0x24, DLE, STX, 0x25, 0x26
+            ]));
+
+            stream.push(Buffer.from([
+                DLE, DLE, 0x27, DLE, ETX, 0x28, ETX, STX, 0x24, 0x25
+            ]));
 
         });
 
@@ -229,7 +274,9 @@ describe("documentation", () => {
                 "startWith": [ STX, STX2 ],
                 "endWith": ETX,
                 "escapeWith": DLE,
-                "escaped": [ DLE, STX, ETX ]
+                "escaped": [
+                    DLE, STX, ETX
+                ]
             })).on("data", (chunk) => {
 
                 ++dataCount;
@@ -240,7 +287,9 @@ describe("documentation", () => {
                 if (1 === dataCount) {
 
                     assert.deepStrictEqual(chunk,
-                        Buffer.from([ STX, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x27, DLE, ETX, 0x28, ETX ]),
+                        Buffer.from([
+                            STX, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x27, DLE, ETX, 0x28, ETX
+                        ]),
                         "The chunk is not as expected"
                     );
 
@@ -248,7 +297,9 @@ describe("documentation", () => {
                 else if (2 === dataCount) {
 
                     assert.deepStrictEqual(chunk,
-                        Buffer.from([ STX2, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x27, DLE, ETX, 0x28, ETX ]),
+                        Buffer.from([
+                            STX2, 0x24, DLE, STX, 0x25, 0x26, DLE, DLE, 0x27, DLE, ETX, 0x28, ETX
+                        ]),
                         "The chunk is not as expected"
                     );
 
@@ -258,10 +309,21 @@ describe("documentation", () => {
 
             });
 
-            stream.push(Buffer.from([ 0x20, STX, 0x24, DLE, STX, 0x25, 0x26 ]));
-            stream.push(Buffer.from([ DLE, DLE, 0x27, DLE, ETX, 0x28, ETX, 0x26, 0x24, 0x25 ]));
-            stream.push(Buffer.from([ STX2, 0x24, DLE, STX, 0x25, 0x26 ]));
-            stream.push(Buffer.from([ DLE, DLE, 0x27, DLE, ETX, 0x28, ETX, 0x26, 0x24, 0x25 ]));
+            stream.push(Buffer.from([
+                0x20, STX, 0x24, DLE, STX, 0x25, 0x26
+            ]));
+
+            stream.push(Buffer.from([
+                DLE, DLE, 0x27, DLE, ETX, 0x28, ETX, 0x26, 0x24, 0x25
+            ]));
+
+            stream.push(Buffer.from([
+                STX2, 0x24, DLE, STX, 0x25, 0x26
+            ]));
+
+            stream.push(Buffer.from([
+                DLE, DLE, 0x27, DLE, ETX, 0x28, ETX, 0x26, 0x24, 0x25
+            ]));
 
         });
 
@@ -287,12 +349,16 @@ describe("documentation", () => {
                     "whatever": 0x51
                 },
                 "escapeWith": DLE,
-                "escaped": [ DLE, ACK, NAK ]
+                "escaped": [
+                    DLE, ACK, NAK
+                ]
             })).on("data", (chunk) => {
 
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x20, 0x21, 0x22, ACK, NAK, WAK, 0x23, ETX ]), "The chunk is not as expected");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    STX, 0x20, 0x21, 0x22, ACK, NAK, WAK, 0x23, ETX
+                ]), "The chunk is not as expected");
 
             }).on("ack", () => {
                 ackFound = true;
@@ -310,8 +376,13 @@ describe("documentation", () => {
 
             });
 
-            stream.push(Buffer.from([ 0x51, 0x24, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK ]));
-            stream.push(Buffer.from([ 0x23, ETX, NAK, DLE, NAK, WAK, DLE, WAK, 0x20, 0x21 ]));
+            stream.push(Buffer.from([
+                0x51, 0x24, ACK, DLE, ACK, STX, 0x20, 0x21, 0x22, ACK, NAK, WAK
+            ]));
+
+            stream.push(Buffer.from([
+                0x23, ETX, NAK, DLE, NAK, WAK, DLE, WAK, 0x20, 0x21
+            ]));
 
         });
 
@@ -331,7 +402,9 @@ describe("documentation", () => {
 
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                assert.deepStrictEqual(chunk, Buffer.from([ STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07 ]), "The chunk is not as expected");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07
+                ]), "The chunk is not as expected");
 
                 const data = chunk.slice(1, chunk.length - 2);
                 const LRC = chunk[chunk.length - 1];
@@ -351,7 +424,9 @@ describe("documentation", () => {
 
             });
 
-            stream.push(Buffer.from([ 0x51, 0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24 ]));
+            stream.push(Buffer.from([
+                0x51, 0x24, STX, 0x20, 0x21, 0x22, 0x24, ETX, 0x07, 0x24
+            ]));
 
         });
 

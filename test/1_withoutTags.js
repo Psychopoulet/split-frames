@@ -24,11 +24,15 @@ describe("without tags", () => {
 
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                assert.deepStrictEqual(chunk, Buffer.from([ 0x01, 0x02, 0x03, 0x04, 0x05 ]), "The chunk is not as expected");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    0x01, 0x02, 0x03, 0x04, 0x05
+                ]), "The chunk is not as expected");
 
                 resolve();
 
-            }).write(Buffer.from([ 0x01, 0x02, 0x03, 0x04, 0x05 ]));
+            }).write(Buffer.from([
+                0x01, 0x02, 0x03, 0x04, 0x05
+            ]));
 
         });
 
@@ -66,11 +70,15 @@ describe("without tags", () => {
 
                 assert.strictEqual(typeof chunk, "object", "The chunk is not an object");
                 assert.strictEqual(chunk instanceof Buffer, true, "The chunk is not a Buffer");
-                assert.deepStrictEqual(chunk, Buffer.from([ 0x01, DLE, 0x04, 0x05, DLE, DLE, 0x06, 0x07, DLE, STX ]), "The chunk is not as expected");
+                assert.deepStrictEqual(chunk, Buffer.from([
+                    0x01, DLE, 0x04, 0x05, DLE, DLE, 0x06, 0x07, DLE, STX
+                ]), "The chunk is not as expected");
 
                 resolve();
 
-            }).write(Buffer.from([ 0x01, DLE, 0x04, 0x05, DLE, DLE, 0x06, 0x07, DLE, STX ]));
+            }).write(Buffer.from([
+                0x01, DLE, 0x04, 0x05, DLE, DLE, 0x06, 0x07, DLE, STX
+            ]));
 
         });
 
