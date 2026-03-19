@@ -111,7 +111,7 @@ export default function initData (options?: iOptions): iConf {
                     if (!checkTagsValidity(specifics[key])) {
 
                         throw new Error(
-                            "\"" + specifics[key] + "\" specifics option"
+                            "\"" + String(specifics[key]) + "\" specifics option"
                             + " is not a number, or an Array of numbers"
                         );
 
@@ -121,7 +121,7 @@ export default function initData (options?: iOptions): iConf {
                     ) {
 
                         throw new Error(
-                            "If you want to use \"" + specifics[key] + "\" specific option,"
+                            "If you want to use \"" + String(specifics[key]) + "\" specific option,"
                             + " you have to use \"endWith\" option"
                         );
 

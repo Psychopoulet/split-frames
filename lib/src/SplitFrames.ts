@@ -1,3 +1,8 @@
+/*
+    eslint-disable no-unmodified-loop-condition
+*/
+// => no-unmodified-loop-condition is disabled to allow data generation in a loop (_digestStartAndEnd)
+
 // deps
 
     // natives
@@ -117,22 +122,17 @@ export default class SplitFrames extends Transform {
 
             protected _chooseDigester (): (enc?: BufferEncoding) => void {
 
-                let digester: (() => void) | undefined = undefined;
+                if (undefined === this._startWith && undefined === this._endWith) {
+                    return this._digestNoStartNoEnd.bind(this);
+                }
+                else if (undefined !== this._startWith && undefined === this._endWith) {
+                    return this._digestStartOnly.bind(this);
+                }
+                else if (undefined === this._startWith && undefined !== this._endWith) {
+                    return this._digestEndOnly.bind(this);
+                }
 
-                    if (undefined === this._startWith && undefined === this._endWith) {
-                        digester = this._digestNoStartNoEnd;
-                    }
-                    else if (undefined !== this._startWith && undefined === this._endWith) {
-                        digester = this._digestStartOnly;
-                    }
-                    else if (undefined === this._startWith && undefined !== this._endWith) {
-                        digester = this._digestEndOnly;
-                    }
-                    else {
-                        digester = this._digestStartAndEnd;
-                    }
-
-                return digester as (enc?: BufferEncoding) => void;
+                return this._digestStartAndEnd.bind(this);
 
             }
 
@@ -311,7 +311,8 @@ export default class SplitFrames extends Transform {
 
                             });
 
-                        if (found) {
+                        // disabled due to malfunction
+                        if (found) { // eslint-disable-line @typescript-eslint/no-unnecessary-condition
                             this._extractSpecifics();
                         }
 
@@ -381,7 +382,7 @@ export default class SplitFrames extends Transform {
 
                             // search specifics
                             let foundSpecific: boolean = false;
-                            for (let i: number = 0; i < KEYS.length && !foundSpecific; ++i) {
+                            for (let i: number = 0; i < KEYS.length; ++i) {
 
                                 if (-1 < this._searchTags(this._specifics[KEYS[i]])) {
                                     foundSpecific = true; break;
@@ -615,10 +616,7 @@ export default class SplitFrames extends Transform {
 
                                     // number | Buffer
                                     if ("number" === typeof tags[i]
-                                        || (
-                                            "object" === typeof tags[i]
-                                            && tags[i] instanceof Buffer
-                                        )
+                                        || ("object" === typeof tags[i] && tags[i] instanceof Buffer)
                                     ) {
 
                                         const _foundAt = this._frame.indexOf(tags[i], beginAt);
