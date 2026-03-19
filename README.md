@@ -1,12 +1,17 @@
 # split-frames
 Split Buffer frames from streams
 
-[![Build Status](https://api.travis-ci.org/Psychopoulet/split-frames.svg?branch=master)](https://travis-ci.org/Psychopoulet/split-frames)
-[![Coverage Status](https://coveralls.io/repos/github/Psychopoulet/split-frames/badge.svg?branch=master)](https://coveralls.io/github/Psychopoulet/split-frames)
-[![Dependency Status](https://david-dm.org/Psychopoulet/split-frames/status.svg)](https://david-dm.org/Psychopoulet/split-frames)
-[![Dev dependency Status](https://david-dm.org/Psychopoulet/split-frames/dev-status.svg)](https://david-dm.org/Psychopoulet/split-frames?type=dev)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=Psychopoulet_split-frames&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=Psychopoulet_split-frames)
 [![Issues](https://img.shields.io/github/issues/Psychopoulet/split-frames.svg)](https://github.com/Psychopoulet/split-frames/issues)
 [![Pull requests](https://img.shields.io/github/issues-pr/Psychopoulet/split-frames.svg)](https://github.com/Psychopoulet/split-frames/pulls)
+
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Psychopoulet_split-frames&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Psychopoulet_split-frames)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Psychopoulet_split-frames&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Psychopoulet_split-frames)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Psychopoulet_split-frames&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Psychopoulet_split-frames)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Psychopoulet_split-frames&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Psychopoulet_split-frames)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Psychopoulet_split-frames&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Psychopoulet_split-frames)
+
+[![Known Vulnerabilities](https://snyk.io/test/github/Psychopoulet/split-frames/badge.svg)](https://snyk.io/test/github/Psychopoulet/split-frames)
 
 ## Installation
 
