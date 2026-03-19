@@ -70,7 +70,7 @@ export default function initData (options?: iOptions): iConf {
         }
 
         else if ("undefined" !== typeof options.specifics && "object" !== typeof options.specifics) {
-            throw new TypeError("escapeWith parameter is not an object");
+            throw new TypeError("specifics parameter is not an object");
         }
 
         else if ("undefined" !== typeof options.controlBits && "string" !== typeof options.controlBits) {
