@@ -397,7 +397,9 @@ describe("start & end", () => {
         });
 
         const readder = new Readable({
-            read () {}
+            read () {
+                // nothing to do here
+            }
         });
 
         const piped = readder.pipe(splitter);

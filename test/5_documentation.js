@@ -1,3 +1,8 @@
+/*
+    eslint-disable no-bitwise
+*/
+// => no-bitwise is disabled to allow LRC computation
+
 // deps
 
     // natives
