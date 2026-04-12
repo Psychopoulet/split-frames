@@ -1,5 +1,5 @@
-.husky/
 .nyc_output/
-coverage/
-node_modules/
 package-lock.json
+coverage/
+lib/cjs/
+node_modules/
