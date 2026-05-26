@@ -168,7 +168,7 @@ export default class SplitFrames extends Transform {
 
                         KEYS.forEach((key: string): void => {
 
-                            const size: number = "object" === typeof this._specifics[key] && this._specifics[key] instanceof Buffer ? (this._specifics[key] as Buffer).length : 1;
+                            const size: number = "object" === typeof this._specifics[key] && this._specifics[key] instanceof Buffer ? this._specifics[key].length : 1;
 
                             for (let foundAt: number = this._searchTags(this._specifics[key]); -1 < foundAt; foundAt = this._searchTags(this._specifics[key])) {
 
@@ -300,7 +300,7 @@ export default class SplitFrames extends Transform {
                                     found = true;
 
                                     const size: number = "object" === typeof this._specifics[key] && this._specifics[key] instanceof Buffer
-                                        ? (this._specifics[key] as Buffer).length
+                                        ? this._specifics[key].length
                                         : 1;
 
                                     this.emit(key);
@@ -328,7 +328,7 @@ export default class SplitFrames extends Transform {
 
                             const firstStart: iSearchedBits | undefined = this._searchFirstStart();
 
-                            const size: number = "object" === typeof this._specifics[key] && this._specifics[key] instanceof Buffer ? (this._specifics[key] as Buffer).length : 1;
+                            const size: number = "object" === typeof this._specifics[key] && this._specifics[key] instanceof Buffer ? this._specifics[key].length : 1;
 
                             for (
                                 let foundAt: number = this._searchTags(this._specifics[key]), i = 0;
