@@ -6,7 +6,7 @@
     const { Readable } = require("node:stream");
 
     // locals
-    const SplitFrames = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+    const SplitFrames = require(join(__dirname, "..", "lib", "src", "main.cts"));
 
 // consts
 
