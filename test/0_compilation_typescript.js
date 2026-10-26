@@ -54,7 +54,9 @@ describe("compilation typescript", () => {
                 compilationSource,
                 "--target es6",
                 "--module commonjs",
-                "--esModuleInterop"
+                "--esModuleInterop",
+                "--ignoreConfig",
+                "--types node"
             ];
 
             exec(args.join(" "), {

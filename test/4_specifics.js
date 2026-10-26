@@ -5,7 +5,7 @@
     const { join } = require("node:path");
 
     // locals
-    const SplitFrames = require(join(__dirname, "..", "lib", "cjs", "main.cjs"));
+    const SplitFrames = require(join(__dirname, "..", "lib", "src", "main.cts"));
 
 // consts
 
