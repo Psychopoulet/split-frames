@@ -88,9 +88,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies
-        run: |
-          npm install
-          npm audit fix
+        run: npm run install-dev
 
       - name: Run audit
         run: npm audit --omit=dev --omit=optional
